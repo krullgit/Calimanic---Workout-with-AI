@@ -1,1 +1,1 @@
-web: npm run start
+web: dist/index.html
