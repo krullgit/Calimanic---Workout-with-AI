@@ -3,7 +3,6 @@ node_modules
 .yalc
 dist
 .vscode
-.babelrc
 camera.gif
 coco.gif
 README.md
