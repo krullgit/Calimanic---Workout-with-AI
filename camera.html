@@ -1,8 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>PoseNet - Camera Feed Demo</title>
+    <title>PullUpDuell</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Holtwood+One+SC&family=Roboto&display=swap" rel="stylesheet">  
     <style>
+
+        body {
+            background-color: rgb(116, 255, 225);
+            
+        }
         .footer {
             position: fixed;
             left: 0;
@@ -29,45 +36,96 @@
          *  The following loading spinner CSS is from SpinKit project
          *  https://github.com/tobiasahlin/SpinKit
          */
-        .sk-spinner-pulse {
-            width: 20px;
-            height: 20px;
-            margin: auto 10px;
-            float: left;
-            background-color: #333;
-            border-radius: 100%;
-            -webkit-animation: sk-pulseScaleOut 1s infinite ease-in-out;
-            animation: sk-pulseScaleOut 1s infinite ease-in-out;
+        .spinner-text-upper {
+                
+            font-family: 'Holtwood One SC', serif;
+            font-size: xx-large;
+            max-width: 600px;
+            text-align: center;
+            /* margin: auto; */
+          
+            position: relative;
+            margin: 30px auto 0px auto;
         }
 
-        @-webkit-keyframes sk-pulseScaleOut {
-            0% {
-                -webkit-transform: scale(0);
-                transform: scale(0);
-            }
+        .spinner-text-lower {
 
-            100% {
-                -webkit-transform: scale(1.0);
+            font-family: 'Roboto', sans-serif;
+            max-width: 600px;
+            text-align: center;
+            /* margin: auto; */
+
+            position: relative;
+            margin: 0px auto 0px auto;
+        }
+
+        /* img{
+            position: relative;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            max-width: 15%;
+            max-height: 15%;
+        } */
+        
+
+        .img_user_1{
+            text-align: center;
+            margin: 100px auto 0px auto;
+        }
+        .img_user_1 img {
+            width: 6%;
+        }
+
+        .img_accept_start{
+            text-align: center;
+            margin: 50px auto 50px auto;
+        }
+        .img_accept_start img {
+            width: 20%;
+        }
+
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+
+            position: relative;
+            margin: 50px auto;
+        }
+
+        .double-bounce1, .double-bounce2 {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255);
+            opacity: 0.6;
+            position: absolute;
+            top: 0;
+            left: 0;
+            
+            -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+            animation: sk-bounce 2.0s infinite ease-in-out;
+        }
+
+        .double-bounce2 {
+            -webkit-animation-delay: -1.0s;
+            animation-delay: -1.0s;
+        }
+
+        @-webkit-keyframes sk-bounce {
+            0%, 100% { -webkit-transform: scale(0.0) }
+            50% { -webkit-transform: scale(1.0) }
+        }
+
+        @keyframes sk-bounce {
+            0%, 100% { 
+                transform: scale(0.0);
+                -webkit-transform: scale(0.0);
+            } 50% { 
                 transform: scale(1.0);
-                opacity: 0;
-            }
-        }
-
-        @keyframes sk-pulseScaleOut {
-            0% {
-                -webkit-transform: scale(0);
-                transform: scale(0);
-            }
-
-            100% {
                 -webkit-transform: scale(1.0);
-                transform: scale(1.0);
-                opacity: 0;
             }
-        }
-
-        .spinner-text {
-            float: left;
         }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -77,10 +135,23 @@
     <div id="info" style='display:none'>
     </div>
     <div id="loading" style='display:flex'>
-        <div class="spinner-text">
-            Loading PoseNet model...
+        <div class="img_user_1">
+            <img src="/images/user_1.png" alt="start">
         </div>
-        <div class="sk-spinner sk-spinner-pulse"></div>
+        <div class="spinner-text-upper">Tim<br> challenged you!<br>5 PullUps!</div>
+        <div id="spinner" class="spinner" style='display:flex'>
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+        </div>
+        <div id="img_accept_start" class="img_accept_start" style='display:none'>
+            <img src="/images/accept_and_start.png" alt="start">
+        </div>
+        <div class="spinner-text-lower">
+           rules:<br><br>
+           - no cheat!<br>
+           - no timelimit<br>
+           - Kinn an die Stange
+        </div>
     </div>
     <div id='main' style='display:none'>
         <video id="video" playsinline style="display: none;">
@@ -89,14 +160,7 @@
     </div>
     <div class="footer">
         <div class="footer-text">
-            <p>
-                PoseNet runs with either a <strong>single-pose</strong> or <strong>multi-pose</strong> detection
-                algorithm. The single person pose detector is faster and more accurate but requires only one subject
-                present in the image.
-                <br>
-                <br> The <strong>output stride</strong> and <strong>input resolution</strong> have the largest effects
-                on accuracy/speed. A <i>higher</i> output stride results in lower accuracy but higher speed. A
-                <i>higher</i> image scale factor results in higher accuracy but lower speed. </p>
+            <!-- <p>Pull Up Challenge</p> -->
         </div>
     </div>
     <script src="camera.js"></script>

@@ -273,6 +273,8 @@ function setupGui(cameras, net) {
         break;
     }
   });
+
+  gui.close()
 }
 
 /**
@@ -541,6 +543,38 @@ export async function bindPage() {
     multiplier: guiState.input.multiplier,
     quantBytes: guiState.input.quantBytes
   });
+  toggleLoadingUI(false, "spinner", "img_accept_start");
+
+  let button = document.getElementById("img_accept_start")
+  button.onclick = function() {
+    fromStartToChallenge(net)
+  }
+
+  // toggleLoadingUI(false);
+
+  // let video;
+
+  // try {
+  //   video = await loadVideo();
+  // } catch (e) {
+  //   let info = document.getElementById('info');
+  //   info.textContent = 'this browser does not support video capture,' +
+  //       'or this device does not have a camera';
+  //   info.style.display = 'block';
+  //   throw e;
+  // }
+
+  // setupGui([], net);
+  // setupFPS();
+  // detectPoseInRealTime(video, net);
+
+  // setupPullUp();
+
+ 
+}
+
+export async function fromStartToChallenge(net) {
+
   toggleLoadingUI(false);
 
   let video;
