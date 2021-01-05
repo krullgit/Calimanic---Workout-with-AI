@@ -1,13 +1,328 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>PoseNet Demos</title>
-  </head>
-  <body>
-    <h1>PoseNet Demos</h1>
-    <ul>
-      <li><a href='camera.html'>Pose Estimation - Camera feed demo</a></li>
-      <li><a href='coco.html'>Pose Estimation - Image demo</a></li>
-    </ul>
-  </body>
+<head>
+    <title>PullUpDuell</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Holtwood+One+SC&family=Roboto&display=swap" rel="stylesheet">  
+    <link href="jquery.nice-number.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" 
+            integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" 
+            crossorigin="anonymous">
+    </script>
+    <script src="jquery.nice-number.js" >
+    </script>
+    <script type="text/javascript">
+        $(function(){
+            $('input[type="number"]').niceNumber();
+        });
+    </script>
+    <style>
+
+        
+        input:focus,
+        select:focus,
+        textarea:focus,
+        button:focus {
+            outline: none;
+        }
+
+        body {
+            background-color: rgb(116, 255, 225);
+            
+        }
+
+
+        .img_user_1{
+            text-align: center;
+            margin: 100px auto 0px auto;
+            max-width: 800px;
+        }
+        .img_user_1 img {
+            width: 20%;
+            min-width: 150px;
+        }
+
+
+        .img_open{
+            text-align: center;
+            margin: 30px auto 40px auto;
+        }
+        .img_open img {
+            height: 80px;
+            /* min-width: 180px; */
+        } 
+
+        /* Style inputs with type="text", select elements and textareas */
+        input[type=text], select, textarea, form {
+        font-family: 'Roboto', sans-serif;
+        width: 100%; /* Full width */
+        padding: 12px; /* Some padding */ 
+        border: 0px solid rgb(0, 0, 0); /* Gray border */
+        border-radius: 8px; /* Rounded borders */
+        border-style:solid;
+        box-sizing: border-box; /* Make sure that padding and width stays in place */
+        margin-top: 6px; /* Add a top margin */
+        margin-bottom: 16px; /* Bottom margin */
+        resize: vertical; /* Allow the user to vertically resize the textarea (not horizontally) */
+        background-color: rgb(116, 255, 225);
+        max-width: 600px;
+        text-align: center;
+        
+        }
+
+        .challengereps{
+            border: none;
+            
+            background-color: rgb(116, 255, 225);
+            font-family: 'Holtwood One SC', serif;
+            font-size: 30pt;
+            padding: 15px 12px;
+            margin-top: 6px; /* Add a top margin */
+            margin-bottom: 16px; /* Bottom margin */
+        }
+        button{
+            border: 0px solid rgb(0, 0, 0); /* Gray border */
+            border-radius: 8px; /* Rounded borders */
+            background-color: rgb(116, 255, 225);
+            font-family: 'Holtwood One SC', serif;
+            font-size: 20pt;
+            width: 40px;
+        }
+        button:hover{
+            font-size: 30pt;;
+        }
+        
+        
+
+        /* When moving the mouse over the submit button, add a darker green color */
+        /* input[type=submit]:hover {
+        background-color: #45a049;
+        } */
+
+        /* Add a background color and some padding around the form */
+        .container {
+        border-radius: 5px;
+        background-color: rgb(116, 255, 225);
+        padding: 20px;
+        text-align: center;
+        margin: 30px auto 0px auto;
+        }
+
+        input[type=submit] {
+            line-height: 1.1;
+            font-family: 'Holtwood One SC', serif;
+            font-size: xx-large;
+            max-width: 600px;
+            text-align: center;
+            /* margin: auto; */
+          
+            position: relative;
+            margin: 0px auto 0px auto;
+            
+            background-color: rgb(116, 255, 225);
+            border: 2px solid rgb(0, 0, 0); /* Gray border */
+            border-radius: 8px; /* Rounded borders */
+            border-style:solid;
+            box-sizing: border-box; /* Make sure that padding and width stays in place */
+     
+        }
+
+        .img_your_name{
+            text-align: center;
+            margin: 0px auto 0px auto;
+        }
+        .img_your_name img {
+            height: 35px;
+            /* min-width: 180px; */
+        } 
+
+        .spinner-text-upper {
+            line-height: 1.1;
+            font-family: 'Holtwood One SC', serif;
+            font-size: 30pt;
+            max-width: 600px;
+            text-align: center;
+            /* margin: auto; */
+            position: relative;
+            margin: 30px auto 0px auto;
+        }
+
+
+        
+
+        @-webkit-keyframes sk-bounce {
+            0%, 100% { -webkit-transform: scale(0.0) }
+            50% { -webkit-transform: scale(1.0) }
+        }
+
+        @keyframes sk-bounce {
+            0%, 100% { 
+                transform: scale(0.0);
+                -webkit-transform: scale(0.0);
+            } 50% { 
+                transform: scale(1.0);
+                -webkit-transform: scale(1.0);
+            }
+        }
+
+        ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: white;
+            opacity: 1; /* Firefox */
+            font-weight: normal;
+        }
+
+        select {
+            font-family: 'Holtwood One SC', serif;
+            background-repeat: no-repeat;
+            background-size: 30px;
+            width: 200px;
+            text-align-last:center
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+
+            position: relative;
+            margin: 50px auto;
+        }
+
+        .double-bounce1, .double-bounce2 {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255);
+            opacity: 0.6;
+            position: absolute;
+            top: 0;
+            left: 0;
+            
+            -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+            animation: sk-bounce 2.0s infinite ease-in-out;
+        }
+
+        @-webkit-keyframes sk-bounce {
+            0%, 100% { -webkit-transform: scale(0.0) }
+            50% { -webkit-transform: scale(1.0) }
+        }
+
+        @keyframes sk-bounce {
+            0%, 100% { 
+                transform: scale(0.0);
+                -webkit-transform: scale(0.0);
+            } 50% { 
+                transform: scale(1.0);
+                -webkit-transform: scale(1.0);
+            }
+        }
+
+        .img_whatsapp{
+            text-align: center;
+            margin: 30px auto 0px auto;
+        }
+        .img_whatsapp img {
+            height: 80px;
+            /* min-width: 180px; */
+        } 
+        .img_copy{
+            text-align: center;
+            margin: 10px auto 0px auto;
+        }
+        .img_copy img {
+            height: 80px;
+            /* min-width: 180px; */
+        }
+
+        .new_created_message {
+
+            font-family: 'Roboto', sans-serif;
+            max-width: 600px;
+            text-align: center;
+            /* margin: auto; */
+
+            position: relative;
+            margin: 30px auto 0px auto;
+        }
+        
+        a.new_created_link:link{
+            color: black;
+            font-size: larger;
+        }
+
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <div class="img_user_1">
+        <img src="/images/user_1.png" alt="logo">
+    </div>
+    <!-- <div id="new_title" class="spinner-text-upper">New<br>Challenge</div> -->
+    <div id="new_title" class="spinner-text-upper">New<br>Challenge</div>
+
+    <div id="new" style='display:flex'>
+        <div class="container">
+            <form id="form">    
+                
+            <div class="img_your_name">
+                <img src="/images/your_name.png" alt="your name">
+            </div>
+            <input type="text" id="OX" name="OX" placeholder="Your Name" pattern=".{1,15}" required style="color:#c9aa54ff; font-weight: bold; font-size: 20px;">
+            <div class="img_your_name">
+            <img src="/images/your_opponent_name.png" alt="other name">
+            </div>
+            <input type="text" id="OY" name="OY" placeholder="Other Players Name" pattern=".{1,15}" required style="color:#55b0c4ff; font-weight: bold; font-size: 20px;">
+        
+            <div class="img_your_name">
+            <img src="/images/exercise.png" alt="exercise">
+            </div>
+            <select id="challengetype" name="challengetype">
+            <option value="pullup">Pull-Up</option>
+            </select>
+
+            <div class="img_your_name">
+            <img src="/images/how_many_reps.png" alt="reps">
+            </div>
+            <input class="challengereps" type="number" id="challengereps" value="5" name="challengereps" ><br>
+        
+            <div class="img_your_name">
+            <img src="/images/rules.png" alt="start">
+            </div>
+            <textarea id="rules" name="challengerules" placeholder="Only if you want to be specific!" style="height:50px" maxlength="300"></textarea>
+            
+            
+            <input type="submit" value="Open" class="submit">
+            </form>
+          </div>
+          
+    </div>
+    <div id='new_created' style='display:none'>    
+        <div id="spinner" class="spinner" style='display:flex'>
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+        </div>
+        <div id="new_created_message" class="new_created_message" style='display:none'>Your Challenge is available for you under this Link:</div>
+        <a id="new_created_link" class="new_created_message new_created_link" href="dummy" style='display:none'>dummy</a>
+        <div id="img_copy" class="img_whatsapp" style='display:none'>
+            <img src="/images/share_copy.png" alt="copy">
+        </div>
+        <div id="img_whatsapp" class="img_copy" style='display:none'>
+            <img src="/images/share_whatsapp.png" alt="whatsapp_share">
+        </div>
+        <div id="img_telegram" class="img_copy" style='display:none'>
+            <img src="/images/share_telegram.png" alt="telegram_share">
+        </div>
+        
+    </div>
+    <div class="footer">
+        <div class="footer-text">
+            <!-- <p>Pull Up Challenge</p> -->
+        </div>
+    </div>
+    <script src="challenge_new.js"></script>
+    
+    
+    <script src="jquery.nice-number.js"></script>
+</body>
+
 </html>

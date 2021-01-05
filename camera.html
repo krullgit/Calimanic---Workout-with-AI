@@ -37,13 +37,41 @@
          *  https://github.com/tobiasahlin/SpinKit
          */
         .spinner-text-upper {
-                
+            line-height: 1.1;
             font-family: 'Holtwood One SC', serif;
             font-size: xx-large;
             max-width: 600px;
             text-align: center;
-            /* margin: auto; */
+            /* margin: auto; */ 
           
+            position: relative;
+            margin: 30px auto 0px auto;
+        }
+        .opponents_selection_item{
+            color:#55b0c4ff;
+            margin-top: 50px;
+        }
+
+        .opponents {
+            line-height: 1.1;
+            font-family: 'Holtwood One SC', serif;
+            font-size: xx-large;
+            max-width: 600px;
+            text-align: center;
+            /* margin: auto; */ 
+          
+            position: relative;
+            margin: 30px auto 0px auto;
+        }
+
+        .opponents-reps {
+            line-height: 1.1;
+            font-family: 'Holtwood One SC', serif;
+            font-size: medium;
+            max-width: 600px;
+            text-align: center;
+            /* margin: auto; */
+            
             position: relative;
             margin: 30px auto 0px auto;
         }
@@ -63,23 +91,69 @@
         .img_user_1{
             text-align: center;
             margin: 100px auto 0px auto;
-        }
+            max-width: 800px;
+        }   
         .img_user_1 img {
-            width: 6%;
-            min-width: 80px;
+            width: 20%;
+            min-width: 150px;
+        }
+
+        .img_winner{
+            text-align: center;
+            margin: 20px auto 0px auto;
+        }
+        .img_winner img {
+            width: 20%;
+            min-width: 150px;
+            max-width: 300px;
         }
 
         .img_accept_start{
             text-align: center;
-            margin: 50px auto 50px auto;
+            margin: 30px auto 40px auto;
         }
         .img_accept_start img {
-            width: 20%;
-            min-width: 180px;
+            height: 80px;
+            /* min-width: 180px; */
+        }        
+        .img_new{
+            text-align: center;
+            margin: 30px auto 0px auto;
         }
+        .img_new img {
+            height: 80px;
+            /* min-width: 100px; */
+        }
+        .img_new_divider{
+            text-align: center;
+            margin: 40px auto 0px auto;
+        }
+        .img_new_divider img {
+            height: 1.5px;
+            /* min-width: 100px; */
+        }
+        .img_reopen{
+            text-align: center;
+            margin: 30px auto 0px auto;
+        }
+        .img_reopen img {
+            height: 80px;
+            /* min-width: 180px; */
+        } 
+        .img_who_are_you{
+            text-align: center;
+            margin: 30px auto 0px auto;
+        }
+        .img_who_are_you img {
+            height: 70px;
+            /* min-width: 180px; */
+        } 
 
 
-        .spinner {
+        
+
+
+        .spinner_1 {
             width: 40px;
             height: 40px;
 
@@ -127,24 +201,65 @@
 <body>
     <div id="info" style='display:none'>
     </div>
-    <div id="loading" style='display:flex'>
-        <div class="img_user_1">
-            <img src="/images/user_1.png" alt="start">
+    <div class="img_user_1">
+        <img src="/images/user_1.png" alt="start">
+    </div>
+    <div id="opponents_title" class="spinner-text-upper">HOLD!</div>
+    
+    <div id="spinner_1" class="spinner_1" style='display:block'>
+        <div class="double-bounce1"></div>
+        <div class="double-bounce2"></div>
+    </div>
+
+    <div id='who_are_you' style='display:none'>    
+        <div id="img_who_are_you" class="img_who_are_you" style='display:block'>
+            <img src="/images/who_are_you.png" alt="New">
         </div>
-        <div class="spinner-text-upper">Tim<br> challenged you!<br>5 PullUps!</div>
-        <div id="spinner" class="spinner" style='display:flex'>
+    </div>
+    
+    <div id='opponents_selection' style='display:none'>
+    </div>   
+
+
+
+    <div id="loading" style='display:none'>
+        
+        <div id="opponents_reps" class="opponents-reps" style='display:none'>
+            <span id="opponents_reps_OX" style="color:#55b0c4ff;">OX</span> 
+            <span id="opponents_reps_OXR" style="color:rgba(131, 131, 131, 0.541);">OXR</span><br>
+            <span id="opponents_reps_OY" style="color:#55b0c4ff;">OY</span> 
+            <span id="opponents_reps_OYR" style="color:rgba(131, 131, 131, 0.541);">OYR</span><br>
+        </div>
+        
+        <div id="spinner" class="spinner" style='display:none'>
             <div class="double-bounce1"></div>
             <div class="double-bounce2"></div>
         </div>
         <div id="img_accept_start" class="img_accept_start" style='display:none'>
             <img src="/images/accept_and_start.png" alt="start">
         </div>
-        <div class="spinner-text-lower">
-           rules:<br><br>
-           - no cheat!<br>
-           - no timelimit<br>
-           - Kinn an die Stange
+        <div id="img_winner" class="img_winner" style='display:none'>
+            <img id="img_winner_image" src="/images/icon_winner.png" alt="Winner">
         </div>
+        <div id="img_looser" class="img_winner" style='display:none'>
+            <img id="img_looser_image" src="/images/icon_looser.png" alt="Looser">
+        </div>
+        <div id="img_reopen" class="img_reopen" style='display:none'>
+            <img src="/images/reopen.png" alt="Reopen">
+        </div>
+        
+        <div id="rules" class="spinner-text-lower" style='display:none'>
+            rules:<br><br>
+            - no cheat!<br>
+            - no timelimit<br>
+        </div>
+        <div id="img_new_divider" class="img_new_divider" style='display:block'>
+            <img src="/images/new_divider.png" alt="New">
+        </div>
+        <div id="img_new" class="img_new" style='display:block'>
+            <img src="/images/new.png" alt="New">
+        </div>
+
     </div>
     <div id='main' style='display:none'>
         <video id="video" playsinline style="display: none;">

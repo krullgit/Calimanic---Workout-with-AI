@@ -1,0 +1,15 @@
+type Link {
+    opponents: String!
+    opponentsreps: String!
+    challengetype: String!
+    challengereps: String!
+    challengerules: String
+}
+
+# type Query {
+#     link(identifier: String!): [Link!]!
+# }
+
+type Query {
+    allLinks: [Link!]!
+}
