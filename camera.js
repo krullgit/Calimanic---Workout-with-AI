@@ -606,7 +606,7 @@ function detectPoseInRealTime(video, net) {
 export async function bindPage() {
 
   var base_url = window.location.origin;
-  let link_new = base_url+"/challenge_new.html"
+  let link_new = base_url
   let button_new = document.getElementById("img_new")
   button_new.onclick = function() {
     window.location.href = link_new;
