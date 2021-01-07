@@ -26,10 +26,26 @@ const videoWidth = 600;
 const videoHeight = 500;
 const stats = new Stats();
 
+var rep_counter_background=document.getElementById('rep_counter_background');
+var rep_counter=document.getElementById('rep_counter');
+var rep_counter_total=document.getElementById('rep_counter_total');
+var challengereps;
+
 /**ä
  * Loads a the camera to be used in the demo
  *
  */
+
+function docReady(fn) {
+  // see if DOM is already available
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+      // call on next available tick
+      setTimeout(fn, 1);
+  } else {
+      document.addEventListener("DOMContentLoaded", fn);
+  }
+}   
+
 async function setupCamera() {
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     throw new Error(
@@ -58,10 +74,35 @@ async function setupCamera() {
   });
 }
 
+// async function setupCamera2() {
+//     // var video = $('body > video')[0];
+//     var video = document.getElementsByTagName("video")[0];
+//     video.width = videoWidth;
+//     video.height = videoHeight;
+    
+//     navigator.getMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+    
+//      const stream = await navigator.mediaDevices.getUserMedia({
+//     'audio': false,
+//     'video': {
+//       facingMode: 'user'
+//     },
+//   });
+//   video.srcObject = stream;
+    
+//     return new Promise((resolve) => {
+//       video.onloadedmetadata = () => {
+//         resolve(video);
+//       };
+//     });
+ 
+
+// }
+
 async function loadVideo() {
   const video = await setupCamera();
+  //const video = await setupCamera2();
   video.play();
-
   return video;
 }
 
@@ -315,7 +356,21 @@ var pullUps = {
 
 function detectPoseInRealTime(video, net) {
   const canvas = document.getElementById('output');
+  
+  document.getElementById('output').style.height = "100%";
+  document.getElementById('output').style.position = "fixed";
+  document.getElementById('output').style.margin = "auto";
+  // document.getElementById('output').style.marginLeft = "-20vw";
+
+
+
+  // left: 50%;
+  // -ms-transform: translate(-50%, -50%);
+  // transform: translate(-50%, -50%);
+  //document.getElementById('output').style.marginLeft = "-400px";
+  console.log(document.getElementById('output').style.height)
   const ctx = canvas.getContext('2d');
+  rep_counter_total.style.display='block'; 
 
   // since images are being fed from a webcam, we want to feed in the
   // original image and then just flip the keypoints' x coordinates. If instead
@@ -486,23 +541,35 @@ function detectPoseInRealTime(video, net) {
 
             // check if hands are high enough
             if ((LeftWristY < NoseY-shoulderWidthMean*1.5) && (RightWirstY < NoseY-shoulderWidthMean*1.5)){
+              console.log("startPositionTaken")
               pullUps.startPositionTaken = true // save that we reached start position
               document.getElementById('pullUp').innerHTML = "Start Position reached!";
 
               // save wrist postitions 
-              if (pullUps.startPositionPosition.length == 0){
-                pullUps.startPositionPosition.push(LeftWristX);
-                pullUps.startPositionPosition.push(LeftWristY);
-                pullUps.startPositionPosition.push(RightWirstX);
-                pullUps.startPositionPosition.push(RightWirstY);
-              }
+              pullUps.startPositionPosition = [] // reset positions
+              pullUps.startPositionPosition.push(LeftWristX);
+              pullUps.startPositionPosition.push(LeftWristY);
+              pullUps.startPositionPosition.push(RightWirstX);
+              pullUps.startPositionPosition.push(RightWirstY);
+              console.log(pullUps.startPositionPosition)
+              
             }
           // we are already at start position and weight for the pull pull up
           }else{
-            if ((LeftWristY > NoseY) && (RightWirstY > NoseY)){
+            if (((pullUps.startPositionPosition[1]+pullUps.startPositionPosition[3])/2 > NoseY)){
               pullUps.startPositionTaken = false // save that we are waiting for getting to the start position again (hang loose)
               pullUps.pullUpCounter = pullUps.pullUpCounter + 1
-              document.getElementById('pullUp').innerHTML = ("Pull-ups done: "+pullUps.pullUpCounter);
+              rep_counter_total.innerHTML = pullUps.pullUpCounter+"/"+challengereps;
+              rep_counter.innerHTML = pullUps.pullUpCounter
+              rep_counter_background.style.display='block';        
+              rep_counter.style.display='block';  
+              
+              setTimeout(function(){
+              //After the time is passed then I change the css display to block that appears the elements
+                rep_counter_background.style.display='none';     
+                rep_counter.style.display='none';
+                        
+              }, 500);
             }
           }
         }
@@ -544,6 +611,8 @@ export async function bindPage() {
   button_new.onclick = function() {
     window.location.href = link_new;
   }
+  
+
 
   toggleLoadingUI(true);
   const net = await posenet.load({
@@ -554,6 +623,7 @@ export async function bindPage() {
     quantBytes: guiState.input.quantBytes
   });
   toggleLoadingUI(false, "spinner");
+
   
   // ------------------------------------------------------------------------------------------------------
   // get the ID from the url
@@ -580,7 +650,7 @@ export async function bindPage() {
         let opponents = String(links.findLinkByID.opponents).split(",").map(s => s.trim())
         let opponentsreps = String(links.findLinkByID.opponentsreps).split(",").map(s => s.trim())
         let challengetype = String(links.findLinkByID.challengetype)
-        let challengereps = String(links.findLinkByID.challengereps)
+        challengereps = String(links.findLinkByID.challengereps)
         let challengerules = String(links.findLinkByID.challengerules)
         return [opponents, opponentsreps, challengetype, challengereps, challengerules]
       } catch (error) {
@@ -607,6 +677,8 @@ export async function bindPage() {
     let challengetype = messages[2]
     let challengereps = messages[3]
     let challengerules = messages[4]
+
+    rep_counter_total.innerHTML = "0/"+challengereps;
 
     var opponents_title = ""
   
@@ -703,6 +775,8 @@ export async function bindPage() {
       }else{
         let button = document.getElementById("img_accept_start")
         button.onclick = function() {
+          document.getElementById('logo').style.display = 'none';
+          document.getElementById('opponents_title').style.display = 'none';
           fromStartToChallenge(net)
         }
       }
