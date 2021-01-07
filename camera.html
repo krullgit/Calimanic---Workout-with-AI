@@ -78,8 +78,10 @@
         }
 
         .spinner-text-lower {
-
-            font-family: 'Roboto', sans-serif;
+            line-height: 1.1;
+            font-family: 'Holtwood One SC', serif;
+            font-size: medium;
+            color: #00d2b4ff;
             max-width: 600px;
             text-align: center;
             /* margin: auto; */
@@ -92,11 +94,9 @@
         .img_user_1{
             text-align: center;
             margin: 100px auto 0px auto;
-            max-width: 800px;
         }   
         .img_user_1 img {
-            width: 20%;
-            min-width: 150px;
+            width: 200px;
         }
 
         .img_winner{
@@ -104,9 +104,7 @@
             margin: 20px auto 0px auto;
         }
         .img_winner img {
-            width: 20%;
-            min-width: 150px;
-            max-width: 300px;
+            width: 200px;
         }
 
         .img_accept_start{
@@ -115,7 +113,7 @@
         }
         .img_accept_start img {
             height: 80px;
-            /* min-width: 180px; */
+        
         }        
         .img_new{
             text-align: center;
@@ -123,7 +121,7 @@
         }
         .img_new img {
             height: 80px;
-            /* min-width: 100px; */
+
         }
         .img_new_divider{
             text-align: center;
@@ -131,7 +129,7 @@
         }
         .img_new_divider img {
             height: 1.5px;
-            /* min-width: 100px; */
+
         }
         .img_reopen{
             text-align: center;
@@ -139,7 +137,7 @@
         }
         .img_reopen img {
             height: 80px;
-            /* min-width: 180px; */
+ 
         } 
         .img_who_are_you{
             text-align: center;
@@ -147,7 +145,7 @@
         }
         .img_who_are_you img {
             height: 70px;
-            /* min-width: 180px; */
+
         } 
 
 
@@ -207,6 +205,8 @@
             position:   fixed; 
         }
 
+        
+
         .rep_counter {
             z-index:10;
             color: white;
@@ -224,7 +224,6 @@
             z-index:10;
             position: fixed;
             color: white;
-            font-family: 'Holtwood One SC', serif;
             bottom: 0vw;
             left: 4vw;
             font-size: 20vw;
@@ -232,12 +231,56 @@
    
         }
 
+        .rep_counter_done {
+            z-index:10;
+            position: fixed;
+            bottom: 4vw;
+            right: 4vw;
+            width: 15vw;
+        }
+
+        
         .output{
             top: 50%;
             left: 50%;
             -ms-transform: translate(-50%, -50%);
             transform: translate(-50%, -50%);
 
+        }
+  
+        
+        .maybe_next_time{
+            text-align: center;
+            margin: 40px auto 50px auto;
+        }
+        .maybe_next_time img {
+            height: 70px;
+            /* min-width: 180px; */
+        } 
+
+        .button_retry{
+            text-align: center;
+            margin: 10px auto 0px auto;
+        }
+        .button_retry img {
+            height: 80px;
+            /* min-width: 180px; */
+        } 
+        .button_submit{
+            text-align: center;
+            margin: 10px auto 0px auto;
+        }
+        .button_submit img {
+            height: 80px;
+            /* min-width: 180px; */
+        }
+        .button_thisneverhappened{
+            text-align: center;
+            margin: 10px auto 0px auto;
+        }
+        .button_thisneverhappened img {
+            height: 80px;
+            /* min-width: 180px; */
         }
 
     </style>
@@ -246,10 +289,7 @@
 
 <body>
     
-    <div id="rep_counter_background" class="rep_counter_background" style='display:none'></div>
-    <div id="rep_counter" class="rep_counter" style='display:none'>20</div>
-    <div id="rep_counter_total" class="rep_counter_total" style='display:none'>0</div>
-    
+        
     <div id="info" style='display:none'>
     </div>
     <div id="logo" class="img_user_1">
@@ -289,6 +329,9 @@
         <div id="img_accept_start" class="img_accept_start" style='display:none'>
             <img src="/images/accept_and_start.png" alt="start">
         </div>
+
+        
+
         <div id="img_winner" class="img_winner" style='display:none'>
             <img id="img_winner_image" src="/images/icon_winner.png" alt="Winner">
         </div>
@@ -301,7 +344,7 @@
         
         <div id="rules" class="spinner-text-lower" style='display:none'>
             rules:<br><br>
-            - no cheat!<br>
+            - no cheating!<br>
             - no timelimit<br>
         </div>
         <div id="img_new_divider" class="img_new_divider" style='display:block'>
@@ -313,13 +356,35 @@
 
     </div>
     <div id='main' style='display:none'>
+        <div id="rep_counter_background" class="rep_counter_background" style='display:none'></div>
+        <div id="rep_counter" class="rep_counter" style='display:none'>20</div>
+        <div id="rep_counter_total" class="rep_counter_total" style='display:none'>0</div>
+        <img src="/images/button_arrow_right.png" id="rep_counter_done" class="rep_counter_done" style='display:none'></img>
+
         <video id="video" playsinline style="display: none;">
         </video>
         <canvas class="output" id="output" />
     </div>
+    <div id="challenge_done" style='display:none'>
+        <div id="maybe_next_time" class="maybe_next_time" >
+            <img src="/images/maybe_next_time.png" alt="copy">
+        </div>
+        <div id="you_still_got_it" class="maybe_next_time" >
+            <img src="/images/you_still_got_it.png" alt="copy">
+        </div>
+        <div id="button_submit" class="button_submit" >
+            <img src="/images/button_submit.png" alt="copy">
+        </div>
+        <div id="button_retry" class="button_retry" >
+            <img src="/images/button_retry.png" alt="whatsapp_share">
+        </div>
+        <div id="button_thisneverhappened" class="button_thisneverhappened" >
+            <img src="/images/button_thisneverhappened.png" alt="telegram_share">
+        </div>
+    </div>
+
     <div class="footer">
         <div class="footer-text">
-            <!-- <p>Pull Up Challenge</p> -->
         </div>
     </div>
     <script src="camera.js"></script>

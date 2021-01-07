@@ -25,26 +25,76 @@ const bspurl = "http://localhost:8888/camera.html?id=286629219312599553&O=Matthe
 const videoWidth = 600;
 const videoHeight = 500;
 const stats = new Stats();
+const gui = new dat.GUI({width: 300});
+dat.GUI.toggleHide();
+let video_object = null;
+let net = null;
+let processing_active = false; // this cariable is needed to deactivate the processing when the back button is triggered
 
 var rep_counter_background=document.getElementById('rep_counter_background');
 var rep_counter=document.getElementById('rep_counter');
 var rep_counter_total=document.getElementById('rep_counter_total');
+var rep_counter_done=document.getElementById('rep_counter_done');
 var challengereps;
+var opponents;
+var opponentsreps;
+var opponent_me;
+var param_me_update = false;
+var id;
 
-/**ä
- * Loads a the camera to be used in the demo
- *
- */
-
-function docReady(fn) {
-  // see if DOM is already available
-  if (document.readyState === "complete" || document.readyState === "interactive") {
-      // call on next available tick
-      setTimeout(fn, 1);
-  } else {
-      document.addEventListener("DOMContentLoaded", fn);
+var pullUps;
+function pullUps_reset() {
+  pullUps = {
+    startPositionTaken: false,
+    startPositionPosition: [],
+    shoulderWidth: [],
+    pullUpCounter: 0,
   }
-}   
+}
+
+
+window.addEventListener('popstate', function(event) {
+
+  processing_active = false
+  // video_object.pause();
+  // video_object.src = "";
+  if (video_object != null){
+    video_object.srcObject.getTracks().forEach(function(track) {
+      track.stop();
+    });
+    video_object = null;
+  }
+
+  // # ------------------------------------------------------------------------------------------------------
+  // # delete ever child of the opponents container
+  // # ------------------------------------------------------------------------------------------------------
+  
+  const myNode = document.getElementById("opponents_selection");
+  while (myNode.lastElementChild) {
+    myNode.removeChild(myNode.lastElementChild);
+  }
+
+  // # ------------------------------------------------------------------------------------------------------
+  // # hode ever elements in element "loading" and "main"
+  // # ------------------------------------------------------------------------------------------------------
+  
+  let children = document.getElementById('loading').children;
+  for (var i = 0; i < children.length; i++) {
+    children[i].style.display = "none";
+  }
+  children = document.getElementById('main').children;
+  for (var i = 0; i < children.length; i++) {
+    children[i].style.display = "none";
+  }
+
+  document.getElementById("challenge_done").style.display = "none";
+  
+  history.pushState(null, null, window.location.pathname+window.location.search);
+  bindPage()
+
+}, false);
+
+
 
 async function setupCamera() {
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -74,34 +124,9 @@ async function setupCamera() {
   });
 }
 
-// async function setupCamera2() {
-//     // var video = $('body > video')[0];
-//     var video = document.getElementsByTagName("video")[0];
-//     video.width = videoWidth;
-//     video.height = videoHeight;
-    
-//     navigator.getMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
-    
-//      const stream = await navigator.mediaDevices.getUserMedia({
-//     'audio': false,
-//     'video': {
-//       facingMode: 'user'
-//     },
-//   });
-//   video.srcObject = stream;
-    
-//     return new Promise((resolve) => {
-//       video.onloadedmetadata = () => {
-//         resolve(video);
-//       };
-//     });
- 
-
-// }
 
 async function loadVideo() {
   const video = await setupCamera();
-  //const video = await setupCamera2();
   video.play();
   return video;
 }
@@ -154,7 +179,7 @@ function setupGui(cameras, net) {
     guiState.camera = cameras[0].deviceId;
   }
 
-  const gui = new dat.GUI({width: 300});
+  
 
   let architectureController = null;
   guiState[tryResNetButtonName] = function() {
@@ -318,6 +343,7 @@ function setupGui(cameras, net) {
   });
 
   gui.close()
+  
 }
 
 /**
@@ -328,38 +354,61 @@ function setupFPS() {
   document.getElementById('main').appendChild(stats.dom);
 }
 
-/**
- * Sets up....
- */
-function setupPullUp() {
-  var node = document.createElement("div");   
-  node.setAttribute("id", "pullUp");      
-  node.innerHTML = "test";  
-  // var textnode = document.createTextNode("Water");    
-  //textnode.setAttribute("id", "pullUp_true");      
-  //node.appendChild(textnode);                              // Append the text to <li>
-  document.getElementById('main').appendChild(node);
-  
-}
+
 
 /**
  * Feeds an image to posenet to estimate poses - this is where the magic
  * happens. This function loops with a requestAnimationFrame method.
  */
 
-var pullUps = {
-  startPositionTaken: false,
-  startPositionPosition: [],
-  shoulderWidth: [],
-  pullUpCounter: 0,
+
+
+function createPageDone() {
+
+  video_object.srcObject.getTracks().forEach(function(track) {
+    track.stop();
+  });
+  video_object = null;
+  
+  
+  document.getElementById('main').style.display = "none"
+  document.getElementById("logo").style.display = "block"
+  document.getElementById("challenge_done").style.display = "block"
+
+  if (pullUps.pullUpCounter >= challengereps){
+    document.getElementById("maybe_next_time").style.display = "none"
+  }else{
+    document.getElementById("you_still_got_it").style.display = "none"
+  }
+  
+
+  let button_retry = document.getElementById("button_retry")
+  button_retry.onclick = function() {
+    pullUps_reset();
+    fromStartToChallenge(net)
+  }
+  let button_thisneverhappened = document.getElementById("button_thisneverhappened")
+  button_thisneverhappened.onclick = function() {
+    bindPage()
+  }
+  let button_submit = document.getElementById("button_submit")
+  button_submit.onclick = function() {
+    databaseSubmitReps().then((messages) => {
+      pullUps_reset();
+      bindPage();
+    })
+  }
 }
 
 function detectPoseInRealTime(video, net) {
+
+  processing_active = true
+
   const canvas = document.getElementById('output');
-  
-  document.getElementById('output').style.height = "100%";
-  document.getElementById('output').style.position = "fixed";
-  document.getElementById('output').style.margin = "auto";
+  canvas.style.height = "100%";
+  canvas.style.position = "fixed";
+  canvas.style.margin = "auto";
+  canvas.style.display = "block";
   // document.getElementById('output').style.marginLeft = "-20vw";
 
 
@@ -368,9 +417,15 @@ function detectPoseInRealTime(video, net) {
   // -ms-transform: translate(-50%, -50%);
   // transform: translate(-50%, -50%);
   //document.getElementById('output').style.marginLeft = "-400px";
-  console.log(document.getElementById('output').style.height)
   const ctx = canvas.getContext('2d');
+  rep_counter_total.innerHTML = pullUps.pullUpCounter+"/"+challengereps;
   rep_counter_total.style.display='block'; 
+
+  rep_counter_done.style.display='block'; 
+  let challenge_done = false;
+  rep_counter_done.onclick = function() {
+    challenge_done = true;
+  }
 
   // since images are being fed from a webcam, we want to feed in the
   // original image and then just flip the keypoints' x coordinates. If instead
@@ -383,6 +438,15 @@ function detectPoseInRealTime(video, net) {
   canvas.height = videoHeight;
 
   async function poseDetectionFrame() {
+
+    if (challenge_done){
+      ctx.clearRect(0, 0, videoWidth, videoHeight);
+      createPageDone();
+      return true;
+    }
+    if (!processing_active){
+      return true;
+    }
     
     if (guiState.changeToArchitecture) {
       // Important to purge variables and free up GPU memory
@@ -517,6 +581,7 @@ function detectPoseInRealTime(video, net) {
       let leftShoulder = keypoints[5]
       let rightShoulder = keypoints[6]
       
+      
       if ((LeftWrist["score"] > minPoseConfidence) && (RightWirst["score"] > minPoseConfidence) && (Nose["score"] > minPoseConfidence) && (leftShoulder["score"] > minPoseConfidence) && (rightShoulder["score"] > minPoseConfidence)){
         
         pullUps.shoulderWidth.push(leftShoulder["position"]["x"]-rightShoulder["position"]["x"]);
@@ -543,7 +608,6 @@ function detectPoseInRealTime(video, net) {
             if ((LeftWristY < NoseY-shoulderWidthMean*1.5) && (RightWirstY < NoseY-shoulderWidthMean*1.5)){
               console.log("startPositionTaken")
               pullUps.startPositionTaken = true // save that we reached start position
-              document.getElementById('pullUp').innerHTML = "Start Position reached!";
 
               // save wrist postitions 
               pullUps.startPositionPosition = [] // reset positions
@@ -551,7 +615,6 @@ function detectPoseInRealTime(video, net) {
               pullUps.startPositionPosition.push(LeftWristY);
               pullUps.startPositionPosition.push(RightWirstX);
               pullUps.startPositionPosition.push(RightWirstY);
-              console.log(pullUps.startPositionPosition)
               
             }
           // we are already at start position and weight for the pull pull up
@@ -570,6 +633,11 @@ function detectPoseInRealTime(video, net) {
                 rep_counter.style.display='none';
                         
               }, 500);
+
+              if (pullUps.pullUpCounter >= challengereps | challenge_done){
+                createPageDone();
+                return true;
+              }
             }
           }
         }
@@ -595,19 +663,99 @@ function detectPoseInRealTime(video, net) {
 
     requestAnimationFrame(poseDetectionFrame);
   }
-
-  poseDetectionFrame();
+  poseDetectionFrame().then((message) => {
+    
+  });
 }
+
+// ------------------------------------------------------------------------------------------------------
+// get data from server according to challenge ID
+// ------------------------------------------------------------------------------------------------------
+
+const databaseQueryID = async () => {
+  const body = { id };
+  try {
+    const res = await fetch('/.netlify/functions/getLinks', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+    const links = await res.json();
+    try {
+      opponents = String(links.findLinkByID.opponents).split(",").map(s => s.trim())
+      opponentsreps = String(links.findLinkByID.opponentsreps).split(",").map(s => s.trim())
+      let challengetype = String(links.findLinkByID.challengetype)
+      challengereps = String(links.findLinkByID.challengereps)
+      let challengerules = String(links.findLinkByID.challengerules)
+      return [opponents, opponentsreps, challengetype, challengereps, challengerules]
+    } catch (error) {
+      let opponents = ["Opponent1","Opponent2"]
+      let opponentsreps = ["0","0"]
+      let challengetype = "pullup"
+      let challengereps = "5"
+      let challengerules = null
+      return [opponents, opponentsreps, challengetype, challengereps, challengerules]
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// ------------------------------------------------------------------------------------------------------
+// get data from server according to challenge ID
+// ------------------------------------------------------------------------------------------------------
+
+const databaseSubmitReps = async (reset = false) => {
+  
+  param_me_update = true
+
+  let opponentsreps_index_me = opponents.indexOf(opponent_me)
+  opponentsreps[opponentsreps_index_me] = pullUps.pullUpCounter
+  let reps = String(opponentsreps[0]+","+opponentsreps[1])
+
+  if (reset==true){
+    reps = "-1,-1"
+  } 
+
+
+  const body = { id, reps };
+  try {
+    const res = await fetch('/.netlify/functions/updateLinks', {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    });
+    const links = await res.json();
+    
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
 /**
  * Kicks off the demo by loading the posenet model, finding and loading
  * available camera devices, and setting off the detectPoseInRealTime function.
  */
 export async function bindPage() {
+  
+  pullUps_reset();
 
   var base_url = window.location.origin;
   let link_new = base_url
+  document.getElementById('challenge_done').style.display = 'none';
+  
+  let children = document.getElementById('loading').children;
+  for (var i = 0; i < children.length; i++) {
+    children[i].style.display = "none";
+  }
+  children = document.getElementById('main').children;
+  for (var i = 0; i < children.length; i++) {
+    children[i].style.display = "none";
+  }
+  
+  document.getElementById("img_new_divider").style.display = "block"
+  document.getElementById("logo").style.display = "block"
   let button_new = document.getElementById("img_new")
+  button_new.style.display = "block"
   button_new.onclick = function() {
     window.location.href = link_new;
   }
@@ -615,7 +763,7 @@ export async function bindPage() {
 
 
   toggleLoadingUI(true);
-  const net = await posenet.load({
+  net = await posenet.load({
     architecture: guiState.input.architecture,
     outputStride: guiState.input.outputStride,
     inputResolution: guiState.input.inputResolution,
@@ -631,41 +779,10 @@ export async function bindPage() {
 
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
-  const id = urlParams.get('id')
+  id = urlParams.get('id')
+  const param_me = urlParams.get('me')
 
-  // ------------------------------------------------------------------------------------------------------
-  // get data from server according to challenge ID
-  // ------------------------------------------------------------------------------------------------------
-
-  const databaseQueryID = async () => {
-    const body = { id };
-    try {
-      const res = await fetch('/.netlify/functions/getLinks', {
-        method: 'POST',
-        body: JSON.stringify(body),
-      });
-      console.log(res)
-      const links = await res.json();
-      try {
-        let opponents = String(links.findLinkByID.opponents).split(",").map(s => s.trim())
-        let opponentsreps = String(links.findLinkByID.opponentsreps).split(",").map(s => s.trim())
-        let challengetype = String(links.findLinkByID.challengetype)
-        challengereps = String(links.findLinkByID.challengereps)
-        let challengerules = String(links.findLinkByID.challengerules)
-        return [opponents, opponentsreps, challengetype, challengereps, challengerules]
-      } catch (error) {
-        console.log("WARNING: Fallback the default game!")
-        let opponents = ["Opponent1","Opponent2"]
-        let opponentsreps = ["0","0"]
-        let challengetype = "pullup"
-        let challengereps = "5"
-        let challengerules = null
-        return [opponents, opponentsreps, challengetype, challengereps, challengerules]
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  
 
   // ------------------------------------------------------------------------------------------------------
   // wait if the server responded the challnge details
@@ -679,37 +796,43 @@ export async function bindPage() {
     let challengerules = messages[4]
 
     rep_counter_total.innerHTML = "0/"+challengereps;
-
-    var opponents_title = ""
-  
-    var opponents_title = document.getElementById("opponents_title").innerHTML
-    console.log(opponents)
-    // console.log(opponents[0])
-    // console.log(opponent_me)
-
     document.getElementById('spinner_1').style.display = 'none';
-    document.getElementById('opponents_title').style.display = 'none';
-    document.getElementById('who_are_you').style.display = 'block';
-    document.getElementById('opponents_selection').style.display = 'block';
-    
-    let node_opponents_selection = document.getElementById('opponents_selection');
-    var i;
-    for (i = 0; i < opponents.length; i++) {
-      let node = document.createElement("div"); 
-      node.setAttribute("id", "opponents_selection_"+i);
-      node.innerHTML = opponents[i]
-      node.classList.add('spinner-text-upper');
-      node.classList.add('opponents_selection_item');
-      node_opponents_selection.appendChild(node);  
-      node.onclick = function() {
-        render_challenge_overview(node.innerHTML)
-      }  
+
+    if (param_me == null){
+
+      // # ------------------------------------------------------------------------------------------------------
+      // # Create the "who_are_you" page
+      // # ------------------------------------------------------------------------------------------------------
+
+      var opponents_title = document.getElementById("opponents_title").innerHTML
+      document.getElementById('opponents_title').style.display = 'none';
+      document.getElementById('who_are_you').style.display = 'block';
+      document.getElementById('opponents_selection').style.display = 'block';
+      let node_opponents_selection = document.getElementById('opponents_selection');
+      var i;
+      for (i = 0; i < opponents.length; i++) {
+        let node = document.createElement("div"); 
+        node.setAttribute("id", "opponents_selection_"+i);
+        node.innerHTML = opponents[i]
+        node.classList.add('spinner-text-upper');
+        node.classList.add('opponents_selection_item');
+        node_opponents_selection.appendChild(node);  
+        node.onclick = function() {
+          const url = new URL(window.location.href);
+          url.searchParams.set('me', node.innerHTML);
+          window.history.pushState("", "", url); 
+          opponent_me = node.innerHTML
+
+          render_challenge_overview()
+        }  
+      }
+    } else {      opponent_me = param_me
+      
+      render_challenge_overview()
     }
-
-    let button = document.getElementById('opponents_selection_1')
     
 
-    function render_challenge_overview(opponent_me) {
+    function render_challenge_overview() {
       
       document.getElementById('img_accept_start').style.display = 'block';
       document.getElementById('rules').style.display = 'block';
@@ -735,13 +858,14 @@ export async function bindPage() {
       document.getElementById("opponents_reps_OY").innerHTML = opponents[1]
   
       document.getElementById('opponents_reps').style.display = 'block';
-  
+
       if (opponentsreps[0] == "-1"){
         document.getElementById("opponents_reps_OXR").innerHTML = "open"
       }else if (opponentsreps[0] == challengereps){
-        document.getElementById("opponents_reps_OX").style.fontSize = "larger"
+        document.getElementById("opponents_reps_OX").style.fontSize = "xx-large"
         document.getElementById("opponents_reps_OXR").innerHTML = challengereps
         document.getElementById("opponents_reps_OXR").style.color = "#04b72bff";
+        document.getElementById("opponents_reps_OXR").style.fontSize = "xx-large"
       }else if (opponentsreps[0] < challengereps){
         
         document.getElementById("opponents_reps_OXR").innerHTML = opponentsreps[0]
@@ -750,17 +874,17 @@ export async function bindPage() {
   
       if (opponentsreps[1] == "-1"){
         document.getElementById("opponents_reps_OYR").innerHTML = "open"
-      }else if (opponentsreps[0] == challengereps){
-        document.getElementById("opponents_reps_OY").style.fontSize = "larger"
+      }else if (opponentsreps[1] == challengereps){
+        document.getElementById("opponents_reps_OY").style.fontSize = "xx-large"
         document.getElementById("opponents_reps_OYR").innerHTML = challengereps
         document.getElementById("opponents_reps_OYR").style.color = "#04b72bff";
-      }else if (opponentsreps[0] < challengereps){
-        document.getElementById("opponents_reps_OYR").innerHTML = opponentsreps[0]
+        document.getElementById("opponents_reps_OYR").style.fontSize = "xx-large"
+      }else if (opponentsreps[1] < challengereps){
+        document.getElementById("opponents_reps_OYR").innerHTML = opponentsreps[1]
         document.getElementById("opponents_reps_OYR").style.color = "#ff5555ff";
       }
       
       if (opponentsreps[0] != "-1" && opponentsreps[1] != "-1"){
-        let challenge_winner = ""
         let opponentsreps_index_me = opponents.indexOf(opponent_me)
         let opponentsreps_me = opponentsreps[opponentsreps_index_me]
         document.getElementById('img_accept_start').style.display = 'None';
@@ -772,12 +896,21 @@ export async function bindPage() {
         }
         document.getElementById('img_reopen').style.display = 'block';
         document.getElementById('rules').style.display = 'none';
+
+        let button_reopen = document.getElementById('img_reopen')
+        button_reopen.onclick = function() {
+          databaseSubmitReps(true);
+          window.open(window.location.pathname+"?id="+id)
+        }
+
       }else{
         let button = document.getElementById("img_accept_start")
         button.onclick = function() {
-          document.getElementById('logo').style.display = 'none';
-          document.getElementById('opponents_title').style.display = 'none';
-          fromStartToChallenge(net)
+          const url = new URL(window.location.href);
+          url.searchParams.set('mode', "challenge");
+          window.history.pushState("", "", url);
+          
+          fromStartToChallenge()
         }
       }
     }
@@ -787,57 +920,36 @@ export async function bindPage() {
 
   });
 
-  // ------------------------------------------------------------------------------------------------------
-  // get the ID from the url
-  // ------------------------------------------------------------------------------------------------------
-
-
-  
-
-  // toggleLoadingUI(false);
-
-  // let video;
-
-  // try {
-  //   video = await loadVideo();
-  // } catch (e) {
-  //   let info = document.getElementById('info');
-  //   info.textContent = 'this browser does not support video capture,' +
-  //       'or this device does not have a camera';
-  //   info.style.display = 'block';
-  //   throw e;
-  // }
-
-  // setupGui([], net);
-  // setupFPS();
-  // detectPoseInRealTime(video, net);
-
-  // setupPullUp();
 
  
 }
 
-export async function fromStartToChallenge(net) {
+export async function fromStartToChallenge() {
+
+  document.getElementById('logo').style.display = 'none';
+  document.getElementById('opponents_title').style.display = 'none';
+  document.getElementById('challenge_done').style.display = 'none';
 
   toggleLoadingUI(false);
 
-  let video;
-
-  try {
-    video = await loadVideo();
-  } catch (e) {
-    let info = document.getElementById('info');
-    info.textContent = 'this browser does not support video capture,' +
-        'or this device does not have a camera';
-    info.style.display = 'block';
-    throw e;
+  if (video_object == null){
+    try {
+      video_object = await loadVideo();
+    } catch (e) {
+      let info = document.getElementById('info');
+      info.textContent = 'this browser does not support video capture,' +
+          'or this device does not have a camera';
+      info.style.display = 'block';
+      throw e;
+    }
   }
 
-  setupGui([], net);
+  if (gui.__controllers.length == 0){
+    setupGui([], net);
+  }
   setupFPS();
-  detectPoseInRealTime(video, net);
+  detectPoseInRealTime(video_object, net);
 
-  setupPullUp();
 
  
 }

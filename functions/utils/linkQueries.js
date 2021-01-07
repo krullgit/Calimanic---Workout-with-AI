@@ -30,9 +30,9 @@ const SEARCH_LINK = `
 
 
 const UPDATE_LINK = `
-  mutation($id: ID!, $opponents: String!, $opponentsreps: String!, $challengetype: String!, $challengereps: String!  ) {
-        updateLink(id: $id, data:{opponents:$opponents, opponentsreps:$opponentsreps, challengetype:$challengetype, challengereps:$challengereps}) {
-            identifier
+  mutation($id: ID!, $opponentsreps: String!) {
+        updateLink(id: $id, data:{opponentsreps:$opponentsreps}) {
+            _id
         }
     }
 `;

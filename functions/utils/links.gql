@@ -1,8 +1,8 @@
 type Link {
-    opponents: String!
-    opponentsreps: String!
-    challengetype: String!
-    challengereps: String!
+    opponents: String
+    opponentsreps: String
+    challengetype: String
+    challengereps: String
     challengerules: String
 }
 

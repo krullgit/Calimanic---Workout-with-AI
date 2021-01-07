@@ -19,7 +19,7 @@ exports.handler = async (event) => {
         //console.log(event)
         //const { opponents } = JSON.parse(event.body);
         //const res = await sendQuery(SEARCH_LINK);
-        const data = res.link;
+        //const data = res.link;
         //console.log
         //console.log(res)
         return formattedResponse(200, res);
