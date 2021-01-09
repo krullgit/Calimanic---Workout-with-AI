@@ -65,7 +65,7 @@ exports.handler = async (event) => {
               }
               //Do something
           }
-          //console.log(opponentspushSubscriptions)
+          console.log(opponentspushSubscriptions)
           opponentspushSubscriptions = JSON.parse(opponentspushSubscriptions)
         
           let text = opponent_me + " did " + opponentsreps[opponents_index_me]+"/"+challengereps+" "+ challengetype
