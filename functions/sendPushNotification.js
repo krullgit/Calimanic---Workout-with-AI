@@ -43,6 +43,7 @@ exports.handler = async (event) => {
       
       if (opponentspushSubscriptions != null){
         console.log("1")
+        console.log(opponentspushSubscriptions)
         opponentspushSubscriptions = opponentspushSubscriptions.split("PULLUPDIVIDER")
         if (opponentspushSubscriptions.length>1){
           console.log("2")
