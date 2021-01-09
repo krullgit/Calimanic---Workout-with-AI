@@ -69,7 +69,7 @@ exports.handler = async (event) => {
           console.log(2)
           console.log(opponentspushSubscriptions_old)
           
-          opponentspushSubscriptions_new = opponentspushSubscriptions_old[0]+"PULLUPDIVIDER"+opponentspushSubscriptions_old[0]
+          opponentspushSubscriptions_new = opponentspushSubscriptions_old[0]+"PULLUPDIVIDER"+opponentspushSubscriptions_old[1]
           console.log(3)
           console.log(opponentspushSubscriptions_new)
         }
