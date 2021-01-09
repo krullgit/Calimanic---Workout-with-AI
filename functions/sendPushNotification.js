@@ -70,7 +70,10 @@ exports.handler = async (event) => {
           console.log(5)
           console.log(opponentspushSubscriptions)
           for (var i = 0; i < opponentspushSubscriptions.length; i++) {
+              console.log("a")
+              console.log(opponentspushSubscriptions[i][0])
               while(opponentspushSubscriptions[i][0]== '"'){
+                console.log("b")
                 opponentspushSubscriptions[i] = opponentspushSubscriptions[i].substring(1, opponentspushSubscriptions[i].length);
               }
               //Do something
