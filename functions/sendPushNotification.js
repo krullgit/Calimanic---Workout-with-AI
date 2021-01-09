@@ -65,8 +65,8 @@ exports.handler = async (event) => {
               }
               //Do something
           }
-          console.log(opponentspushSubscriptions)
           opponentspushSubscriptions = JSON.parse(opponentspushSubscriptions)
+          console.log(opponentspushSubscriptions)
         
           let text = opponent_me + " did " + opponentsreps[opponents_index_me]+"/"+challengereps+" "+ challengetype
           let url = "https://thirsty-brattain-52b1a8.netlify.app/camera.html?id="+id
