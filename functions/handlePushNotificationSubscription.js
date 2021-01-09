@@ -37,19 +37,27 @@ exports.handler = async (event) => {
         if (opponentspushSubscriptions_old == null || opponentspushSubscriptions_old.split("PULLUPDIVIDER").length == 1 ){
           opponentspushSubscriptions_new = [null,null];
           opponentspushSubscriptions_new[opponents_index_me] = opponentspushSubscriptions
+
+          
           opponentspushSubscriptions_new = opponentspushSubscriptions_new[0]+"PULLUPDIVIDER"+opponentspushSubscriptions_new[0]
           
         // if there was a sub object already just update the requested one
         }else{
           opponentspushSubscriptions_old = opponentspushSubscriptions_old.split("PULLUPDIVIDER")
           opponentspushSubscriptions_old[opponents_index_me] = opponentspushSubscriptions
+
+          // the subscription is weirdly formatted in graphql, so I hack something here to fix it
+          opponentspushSubscriptions_old = opponentspushSubscriptions_old.map(s => s.replace(/\\/g, '')); // replace "\" with ""
+          for (var i = 0; i < opponentspushSubscriptions_old.length; i++) {
+              while(opponentspushSubscriptions_old[0]== '"'){
+                opponentspushSubscriptions_old[i] = opponentspushSubscriptions_old[i].substring(1, opponentspushSubscriptions.length);
+              }
+              //Do something
+          }
+          
           opponentspushSubscriptions_new = opponentspushSubscriptions_old[0]+"PULLUPDIVIDER"+opponentspushSubscriptions_old[0]
         }
-        console.log("1")
-        console.log(opponentspushSubscriptions)
         opponentspushSubscriptions = opponentspushSubscriptions_new
-        console.log("1")
-        console.log(opponentspushSubscriptions)
 
         // update the sub object in th database
         const variables_update = { id, opponentspushSubscriptions};

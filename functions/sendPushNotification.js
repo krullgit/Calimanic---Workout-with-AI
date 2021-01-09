@@ -60,6 +60,7 @@ exports.handler = async (event) => {
           // the subscription is weirdly formatted in graphql, so I hack something here to fix it
           opponentspushSubscriptions = opponentspushSubscriptions.replace(/\\/g, ''); // replace "\" with ""
           opponentspushSubscriptions = opponentspushSubscriptions.substring(0, opponentspushSubscriptions.length - 1); // cut last """
+          console.log(opponentspushSubscriptions)
           opponentspushSubscriptions = JSON.parse(opponentspushSubscriptions)
         
           let text = opponent_me + " did " + opponentsreps[opponents_index_me]+"/"+challengereps+" "+ challengetype
