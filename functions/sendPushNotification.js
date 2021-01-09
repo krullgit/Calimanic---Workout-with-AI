@@ -40,35 +40,38 @@ exports.handler = async (event) => {
       let opponents = res_1.findLinkByID.opponents.split(",").map(s => s.trim())
       let opponents_index_me = opponents.indexOf(opponent_me.trim())
       let opponentspushSubscriptions = JSON.stringify(res_1.findLinkByID.opponentspushSubscriptions)
+
+      let opponentsreps = String(res_1.findLinkByID.opponentsreps).split(",").map(s => s.trim())
+      let challengetype = String(res_1.findLinkByID.challengetype)
+      if (challengetype == "pullup"){
+        challengetype = "Pullups"
+      }
+      let challengereps = String(res_1.findLinkByID.challengereps)
+
       
       if (opponentspushSubscriptions != null){
-        console.log("1")
-        console.log(opponentspushSubscriptions)
         opponentspushSubscriptions = opponentspushSubscriptions.split("PULLUPDIVIDER")
         if (opponentspushSubscriptions.length>1){
-          console.log("2")
           if (opponents_index_me == 0){
             opponentspushSubscriptions = opponentspushSubscriptions[1]
-            console.log("3")
           } else if(opponents_index_me == 1){
-            console.log("4")
             opponentspushSubscriptions = opponentspushSubscriptions[0]
           }
-          console.log("5")
           // the subscription is weirdly formatted in graphql, so I hack something here to fix it
           opponentspushSubscriptions = opponentspushSubscriptions.replace(/\\/g, ''); // replace "\" with ""
           opponentspushSubscriptions = opponentspushSubscriptions.substring(0, opponentspushSubscriptions.length - 1); // cut last """
           opponentspushSubscriptions = JSON.parse(opponentspushSubscriptions)
-          console.log(opponentspushSubscriptions)
+        
+          let text = opponent_me + " did " + opponentsreps[opponents_index_me]+"/"+challengereps+" "+ challengetype
+          let url = "https://thirsty-brattain-52b1a8.netlify.app/camera.html?id="+id
+
           webpush
           .sendNotification(
             opponentspushSubscriptions,
             JSON.stringify({
-              title: "New Product Available ",
-              text: "HEY! Take a look at this brand new t-shirt!",
-              tag: "new-product",
-              url: "/new-product-jason-leung-HM6TMmevbZQ-unsplash.html"
-           
+              title: text,
+              url: url,
+              icon: "/images/user_1.png"
             })
           )
         }

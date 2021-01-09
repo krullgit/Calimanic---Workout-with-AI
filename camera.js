@@ -412,6 +412,7 @@ function createPageDone() {
         method: 'POST',
         body: JSON.stringify(body),
       }).then(response => {
+        console.log(response)
         pullUps_reset();
         bindPage();
       })
