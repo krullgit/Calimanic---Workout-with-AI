@@ -85,9 +85,14 @@ exports.handler = async (event) => {
           console.log(6)
           console.log(opponentspushSubscriptions)
           opponentspushSubscriptions = JSON.parse(opponentspushSubscriptions)
+          console.log(7)
+          console.log(opponentspushSubscriptions)
         
           let text = opponent_me + " did " + opponentsreps[opponents_index_me]+"/"+challengereps+" "+ challengetype
           let url = "https://thirsty-brattain-52b1a8.netlify.app/camera.html?id="+id
+
+          console.log(8)
+          console.log(opponentspushSubscriptions)
 
           webpush
           .sendNotification(
@@ -98,6 +103,8 @@ exports.handler = async (event) => {
               icon: "/images/user_1.png"
             })
           )
+          console.log(9)
+          console.log(opponentspushSubscriptions)
         }
       }
       
