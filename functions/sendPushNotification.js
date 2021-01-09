@@ -52,19 +52,30 @@ exports.handler = async (event) => {
       if (opponentspushSubscriptions != null){
         opponentspushSubscriptions = opponentspushSubscriptions.split("PULLUPDIVIDER")
         if (opponentspushSubscriptions.length>1){
+          console.log(1)
+          console.log(opponentspushSubscriptions)
           if (opponents_index_me == 0){
+            console.log(2)
+            console.log(opponentspushSubscriptions)
             opponentspushSubscriptions = opponentspushSubscriptions[1]
           } else if(opponents_index_me == 1){
+            console.log(3)
+            console.log(opponentspushSubscriptions)
             opponentspushSubscriptions = opponentspushSubscriptions[0]
           }
+          console.log(4)
+          console.log(opponentspushSubscriptions)
           // the subscription is weirdly formatted in graphql, so I hack something here to fix it
           opponentspushSubscriptions = opponentspushSubscriptions.replace(/\\/g, ''); // replace "\" with ""
+          console.log(5)
+          console.log(opponentspushSubscriptions)
           for (var i = 0; i < opponentspushSubscriptions.length; i++) {
               while(opponentspushSubscriptions[0]== '"'){
                 opponentspushSubscriptions[i] = opponentspushSubscriptions[i].substring(1, opponentspushSubscriptions[i].length);
               }
               //Do something
           }
+          console.log(6)
           opponentspushSubscriptions = JSON.parse(opponentspushSubscriptions)
           console.log(opponentspushSubscriptions)
         
