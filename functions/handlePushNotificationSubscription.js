@@ -1,14 +1,10 @@
 const axios = require('axios');
 require('dotenv').config();
-const bodyParser = require("body-parser");
-const path = require("path");
-
 
 
 const { SEARCH_LINK, UPDATE_opponentspushSubscriptions } = require('./utils/linkQueries.js');
 const sendQuery = require('./utils/sendQuery');
 const formattedResponse = require('./utils/formattedResponse');
-const { ConsoleReporter } = require('jasmine');
 
 
 exports.handler = async (event) => {

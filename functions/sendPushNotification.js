@@ -1,8 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
 const webpush = require("web-push");
-const bodyParser = require("body-parser");
-const path = require("path");
 
 const { SEARCH_LINK } = require('./utils/linkQueries.js');
 const sendQuery = require('./utils/sendQuery');
