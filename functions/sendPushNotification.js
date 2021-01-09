@@ -69,17 +69,17 @@ exports.handler = async (event) => {
           opponentspushSubscriptions = opponentspushSubscriptions.replace(/\\/g, ''); // replace "\" with ""
           console.log(5)
           console.log(opponentspushSubscriptions)
-          for (var i = 0; i < opponentspushSubscriptions.length; i++) {
-              console.log("a")
-              console.log(opponentspushSubscriptions[i])
-              console.log(opponentspushSubscriptions[i][0])
-              while(opponentspushSubscriptions[i][0]=== '"'){
-                //console.log(opponentspushSubscriptions[i])
-                opponentspushSubscriptions[i] = opponentspushSubscriptions[i].substring(1, opponentspushSubscriptions[i].length);
-                //console.log("b")
-              }
-              //Do something
+      
+          console.log("a")
+          console.log(opponentspushSubscriptions)
+          console.log(opponentspushSubscriptions[0])
+          while(opponentspushSubscriptions[0]=== '"'){
+            //console.log(opponentspushSubscriptions[i])
+            opponentspushSubscriptions = opponentspushSubscriptions.substring(1, opponentspushSubscriptions.length);
+            //console.log("b")
           }
+          //Do something
+          
           console.log(6)
           console.log(opponentspushSubscriptions)
           opponentspushSubscriptions = JSON.parse(opponentspushSubscriptions)
