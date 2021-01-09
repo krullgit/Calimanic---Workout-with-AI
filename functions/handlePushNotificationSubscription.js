@@ -50,7 +50,7 @@ exports.handler = async (event) => {
           opponentspushSubscriptions_old = opponentspushSubscriptions_old.map(s => s.replace(/\\/g, '')); // replace "\" with ""
           for (var i = 0; i < opponentspushSubscriptions_old.length; i++) {
               while(opponentspushSubscriptions_old[0]== '"'){
-                opponentspushSubscriptions_old[i] = opponentspushSubscriptions_old[i].substring(1, opponentspushSubscriptions.length);
+                opponentspushSubscriptions_old[i] = opponentspushSubscriptions_old[i].substring(1, opponentspushSubscriptions_old[i].length);
               }
               //Do something
           }
