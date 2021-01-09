@@ -42,14 +42,18 @@ exports.handler = async (event) => {
       let opponentspushSubscriptions = JSON.stringify(res_1.findLinkByID.opponentspushSubscriptions)
       
       if (opponentspushSubscriptions != null){
+        console.log("1")
         opponentspushSubscriptions = opponentspushSubscriptions.split("PULLUPDIVIDER")
         if (opponentspushSubscriptions.length>1){
+          console.log("2")
           if (opponents_index_me == 0){
             opponentspushSubscriptions = opponentspushSubscriptions[1]
+            console.log("3")
           } else if(opponents_index_me == 1){
+            console.log("4")
             opponentspushSubscriptions = opponentspushSubscriptions[0]
           }
-          
+          console.log("5")
           // the subscription is weirdly formatted in graphql, so I hack something here to fix it
           opponentspushSubscriptions = opponentspushSubscriptions.replace(/\\/g, ''); // replace "\" with ""
           opponentspushSubscriptions = opponentspushSubscriptions.substring(0, opponentspushSubscriptions.length - 1); // cut last """
