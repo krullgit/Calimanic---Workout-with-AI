@@ -69,11 +69,13 @@ exports.handler = async (event) => {
           opponentspushSubscriptions = opponentspushSubscriptions.replace(/\\/g, ''); // replace "\" with ""
           console.log(5)
           console.log(opponentspushSubscriptions)
-      
-          console.log("a")
+          
+
+          console.log("aaaa")
           console.log(opponentspushSubscriptions)
           console.log(opponentspushSubscriptions[0])
           while(opponentspushSubscriptions[0]=== '"'){
+            console.log(opponentspushSubscriptions)
             //console.log(opponentspushSubscriptions[i])
             opponentspushSubscriptions = opponentspushSubscriptions.substring(1, opponentspushSubscriptions.length);
             //console.log("b")
