@@ -47,7 +47,13 @@ exports.handler = async (event) => {
           
         // if there was a sub object already just update the requested one
         }else{
+          console.log(0)
+          console.log(opponentspushSubscriptions)
+          console.log(0.5)
+          console.log(opponentspushSubscriptions_old)
           opponentspushSubscriptions_old = opponentspushSubscriptions_old.split("PULLUPDIVIDER")
+          console.log(0.6)
+          console.log(opponentspushSubscriptions_old)
           opponentspushSubscriptions_old[opponents_index_me] = opponentspushSubscriptions
           console.log(1)
           console.log(opponentspushSubscriptions_old)
