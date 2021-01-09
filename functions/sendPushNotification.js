@@ -48,7 +48,7 @@ exports.handler = async (event) => {
       }
       let challengereps = String(res_1.findLinkByID.challengereps)
 
-      
+      console.log(opponentspushSubscriptions)
       if (opponentspushSubscriptions != null){
         opponentspushSubscriptions = opponentspushSubscriptions.split("PULLUPDIVIDER")
         if (opponentspushSubscriptions.length>1){
