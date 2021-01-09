@@ -35,20 +35,22 @@ exports.handler = async (event) => {
           SEARCH_LINK,
           variables
       );
-
       // check which index the requester has in our database
       let opponents = res_1.findLinkByID.opponents.split(",").map(s => s.trim())
+      console.log(opponents)
+      console.log(opponent_me)
       let opponents_index_me = opponents.indexOf(opponent_me.trim())
+      console.log(opponents_index_me)
       let opponentspushSubscriptions = JSON.stringify(res_1.findLinkByID.opponentspushSubscriptions)
 
       let opponentsreps = String(res_1.findLinkByID.opponentsreps).split(",").map(s => s.trim())
+      console.log(opponentspushSubscriptions)
       let challengetype = String(res_1.findLinkByID.challengetype)
       if (challengetype == "pullup"){
         challengetype = "Pullups"
       }
       let challengereps = String(res_1.findLinkByID.challengereps)
 
-      console.log(opponentspushSubscriptions)
       if (opponentspushSubscriptions != null){
         opponentspushSubscriptions = opponentspushSubscriptions.split("PULLUPDIVIDER")
         if (opponentspushSubscriptions.length>1){
@@ -106,7 +108,8 @@ exports.handler = async (event) => {
             JSON.stringify({
               title: text,
               url: url,
-              icon: "/images/user_1.png"
+              icon: "/images/user_1.png",
+              badge: "/images/user_1.png"
             })
           )
           console.log(9)
