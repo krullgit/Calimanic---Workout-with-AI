@@ -59,6 +59,7 @@ exports.handler = async (event) => {
           opponentspushSubscriptions = opponentspushSubscriptions.replace(/\\/g, ''); // replace "\" with ""
           opponentspushSubscriptions = opponentspushSubscriptions.substring(0, opponentspushSubscriptions.length - 1); // cut last """
           opponentspushSubscriptions = JSON.parse(opponentspushSubscriptions)
+          console.log(opponentspushSubscriptions)
           webpush
           .sendNotification(
             opponentspushSubscriptions,
