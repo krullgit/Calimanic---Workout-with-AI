@@ -9,6 +9,7 @@
         body {
             background-color: rgb(116, 255, 225);
             margin: 0px;
+            line-height:0
             
         }
         .footer {
@@ -81,13 +82,14 @@
             line-height: 1.1;
             font-family: 'Holtwood One SC', serif;
             font-size: medium;
-            color: #00d2b4ff;
+            color: #000; /* Fallback for older browsers */
+            color: rgba(0, 0, 0, 0.2);
             max-width: 600px;
             text-align: center;
             /* margin: auto; */
 
             position: relative;
-            margin: 0px auto 0px auto;
+            margin: 30px auto 0px auto;
         }
 
 
@@ -109,7 +111,7 @@
 
         .img_accept_start{
             text-align: center;
-            margin: 30px auto 40px auto;
+            margin: 30px auto 0px auto;
         }
         .img_accept_start img {
             height: 80px;
@@ -121,6 +123,16 @@
         }
         .img_new img {
             height: 80px;
+            width: 100%;
+
+        }
+        .img_new2{
+            text-align: center;
+            margin: 30px auto 0px auto;
+        }
+        .img_new2 img {
+            height: 80px;
+            width: 100%;
 
         }
         .img_new_divider{
@@ -137,6 +149,14 @@
         }
         .img_reopen img {
             height: 80px;
+ 
+        } 
+        .button_get_notified{
+            text-align: center;
+            margin: 30px auto 0px auto;
+        }
+        .button_get_notified img {
+            height: 120px;
  
         } 
         .img_who_are_you{
@@ -221,14 +241,35 @@
         }
 
         .rep_counter_total {
+            line-height: 1;
             z-index:10;
             position: fixed;
             color: white;
-            bottom: 0vw;
+            bottom: 2vw;
             left: 4vw;
             font-size: 20vw;
             font-family: 'Roboto', sans-serif;
-   
+        }
+
+        .rep_counter_e {
+            line-height: 1;
+            z-index:10;
+            position: fixed;
+            color: white;
+
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+         
+        }
+
+        .rep_counter_total_done {
+            color: black;
+            font-size: 200px;
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+            margin: 100px auto 0px auto;
+            line-height: 1.0;
         }
 
         .rep_counter_done {
@@ -251,16 +292,17 @@
         
         .maybe_next_time{
             text-align: center;
-            margin: 40px auto 50px auto;
+            margin: 0px auto 50px auto;
+            
         }
         .maybe_next_time img {
-            height: 70px;
+            height: 50px;
             /* min-width: 180px; */
         } 
 
         .button_retry{
             text-align: center;
-            margin: 10px auto 0px auto;
+            margin: 30px auto 0px auto;
         }
         .button_retry img {
             height: 80px;
@@ -304,7 +346,7 @@
 
     <div id='who_are_you' style='display:none'>    
         <div id="img_who_are_you" class="img_who_are_you" style='display:block'>
-            <img src="/images/who_are_you.png" alt="New">
+            <img src="/images/who_are_you.png" alt="who_are_you">
         </div>
     </div>
     
@@ -347,25 +389,49 @@
             - no cheating!<br>
             - no timelimit<br>
         </div>
+        <div id="button_get_notified" class="button_get_notified" style='display:none'>
+            <img src="/images/button_get_notified.svg" alt="Reopen">
+        </div>
         <div id="img_new_divider" class="img_new_divider" style='display:block'>
-            <img src="/images/new_divider.png" alt="New">
+            <img src="/images/new_divider.png" alt="">
         </div>
+        
         <div id="img_new" class="img_new" style='display:block'>
-            <img src="/images/new.png" alt="New">
+            <img src="/images/new.svg" alt="New">
         </div>
+        
+        
+        <!-- <div id="img_new2" class="rep_counter_e" style='display:block'>
+            <img src="/images/e_pullup_1.svg" alt="New">
+        </div> -->
+        <!-- <div id="img_new2" class="rep_counter_e" style='display:block'>
+            <img src="/images/e_pullup_1.svg" alt="New">
+        </div> -->
+        
 
+        
     </div>
     <div id='main' style='display:none'>
         <div id="rep_counter_background" class="rep_counter_background" style='display:none'></div>
         <div id="rep_counter" class="rep_counter" style='display:none'>20</div>
-        <div id="rep_counter_total" class="rep_counter_total" style='display:none'>0</div>
-        <img src="/images/button_arrow_right.png" id="rep_counter_done" class="rep_counter_done" style='display:none'></img>
-
-        <video id="video" playsinline style="display: none;">
+        <div id="rep_counter_total" class="rep_counter_total" style='display:none'></div>
+        <img src="/images/button_arrow_right.svg" id="rep_counter_done" class="rep_counter_done" style='display:none'></img>
+        <div id="rep_counter_e1" class="rep_counter_e" style='display:none; width: 20vh;'>
+            <img src="/images/e_pullup_1.svg" alt="New">
+        </div>
+        <div id="rep_counter_e2" class="rep_counter_e" style='display:none; width: 20vh;'>
+            <img src="/images/e_pullup_2.svg" alt="New">
+        </div>
+        <video id="video" playsinline style="display:none">
+        
+        <!-- <div id="img_new2" class="rep_counter_e" style='display:none'>
+            <img src="/images/e_pullup_1.svg" alt="New">
+        </div> -->
         </video>
         <canvas class="output" id="output" />
     </div>
     <div id="challenge_done" style='display:none'>
+        <div id="rep_counter_total_done" class="rep_counter_total_done" style='display:none'>0</div>
         <div id="maybe_next_time" class="maybe_next_time" >
             <img src="/images/maybe_next_time.png" alt="copy">
         </div>
@@ -374,6 +440,9 @@
         </div>
         <div id="button_submit" class="button_submit" >
             <img src="/images/button_submit.png" alt="copy">
+        </div>
+        <div id="img_new_divider_done" class="img_new_divider">
+            <img src="/images/new_divider.png" alt="">
         </div>
         <div id="button_retry" class="button_retry" >
             <img src="/images/button_retry.png" alt="whatsapp_share">

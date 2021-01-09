@@ -261,8 +261,18 @@
 
     <div id="new" style='display:flex'>
         <div class="container">
-            <form id="form">    
-                
+            <form id="form">   
+            <div class="img_your_name">
+            <img src="/images/exercise.png" alt="exercise">
+            </div> 
+            <select id="challengetype" name="challengetype">
+            <option value="pullup">Pull-Up</option>
+            </select>
+
+            <div class="img_your_name">
+            <img src="/images/how_many_reps.png" alt="reps">
+            </div>
+            <input class="challengereps" type="number" id="challengereps" value="5" name="challengereps" ><br>
             <div class="img_your_name">
                 <img src="/images/your_name.png" alt="your name">
             </div>
@@ -272,22 +282,13 @@
             </div>
             <input type="text" id="OY" name="OY" placeholder="Other Players Name" pattern=".{1,15}" required style="color:#55b0c4ff; font-weight: bold; font-size: 20px;">
         
-            <div class="img_your_name">
-            <img src="/images/exercise.png" alt="exercise">
-            </div>
-            <select id="challengetype" name="challengetype">
-            <option value="pullup">Pull-Up</option>
-            </select>
-
-            <div class="img_your_name">
-            <img src="/images/how_many_reps.png" alt="reps">
-            </div>
-            <input class="challengereps" type="number" id="challengereps" value="5" name="challengereps" ><br>
+            
+            
         
             <div class="img_your_name">
             <img src="/images/rules.png" alt="start">
             </div>
-            <textarea id="rules" name="challengerules" placeholder="Only if you want to be specific!" style="height:50px" maxlength="300"></textarea>
+            <textarea id="rules" name="challengerules" placeholder="Only if you want to be specific!" style="height:50px; font-weight: bold; font-size: 20px;" maxlength="300"></textarea>
             
             
             <input type="submit" value="Open" class="submit">

@@ -34,6 +34,7 @@ let processing_active = false; // this cariable is needed to deactivate the proc
 var rep_counter_background=document.getElementById('rep_counter_background');
 var rep_counter=document.getElementById('rep_counter');
 var rep_counter_total=document.getElementById('rep_counter_total');
+var rep_counter_total_done=document.getElementById('rep_counter_total_done');
 var rep_counter_done=document.getElementById('rep_counter_done');
 var challengereps;
 var opponents;
@@ -41,6 +42,15 @@ var opponentsreps;
 var opponent_me;
 var param_me_update = false;
 var id;
+
+import {
+  isPushNotificationSupported,
+  initializePushNotifications,
+  registerServiceWorker,
+  getUserSubscription,
+  createNotificationSubscription
+} from "./push-notifications";
+
 
 var pullUps;
 function pullUps_reset() {
@@ -372,8 +382,9 @@ function createPageDone() {
   
   
   document.getElementById('main').style.display = "none"
-  document.getElementById("logo").style.display = "block"
+  document.getElementById("rep_counter_total_done").style.display = "block"
   document.getElementById("challenge_done").style.display = "block"
+  
 
   if (pullUps.pullUpCounter >= challengereps){
     document.getElementById("maybe_next_time").style.display = "none"
@@ -393,9 +404,17 @@ function createPageDone() {
   }
   let button_submit = document.getElementById("button_submit")
   button_submit.onclick = function() {
+
     databaseSubmitReps().then((messages) => {
-      pullUps_reset();
-      bindPage();
+
+      const body = { id, opponent_me };
+      fetch('/.netlify/functions/sendPushNotification', {
+        method: 'POST',
+        body: JSON.stringify(body),
+      }).then(response => {
+        pullUps_reset();
+        bindPage();
+      })
     })
   }
 }
@@ -419,9 +438,51 @@ function detectPoseInRealTime(video, net) {
   //document.getElementById('output').style.marginLeft = "-400px";
   const ctx = canvas.getContext('2d');
   rep_counter_total.innerHTML = pullUps.pullUpCounter+"/"+challengereps;
-  rep_counter_total.style.display='block'; 
 
+  rep_counter_total_done.innerHTML = pullUps.pullUpCounter+"/"+challengereps;
+
+  rep_counter_total.style.display='block'; 
   rep_counter_done.style.display='block'; 
+
+  // HEREEE
+
+  setTimeout(function(){
+    document.getElementById("rep_counter_e1").style.display='none';                
+    document.getElementById("rep_counter_e2").style.display='none';   
+  }, 500);
+  setTimeout(function(){
+    document.getElementById("rep_counter_e1").style.display='block';      
+    document.getElementById("rep_counter_e2").style.display='none';             
+  }, 1000);
+  setTimeout(function(){
+    document.getElementById("rep_counter_e1").style.display='none';  
+    document.getElementById("rep_counter_e2").style.display='block';                  
+  }, 1500);
+  setTimeout(function(){
+    document.getElementById("rep_counter_e1").style.display='block';  
+    document.getElementById("rep_counter_e2").style.display='none';                  
+  }, 2000);
+  setTimeout(function(){
+    document.getElementById("rep_counter_e1").style.display='none';  
+    document.getElementById("rep_counter_e2").style.display='block';                  
+  }, 2500);
+  setTimeout(function(){
+    document.getElementById("rep_counter_e1").style.display='block';  
+    document.getElementById("rep_counter_e2").style.display='none';                  
+  }, 3000);
+  setTimeout(function(){
+    document.getElementById("rep_counter_e1").style.display='none';  
+    document.getElementById("rep_counter_e2").style.display='block';                  
+  }, 3500);
+  setTimeout(function(){
+    document.getElementById("rep_counter_e1").style.display='none';  
+    document.getElementById("rep_counter_e2").style.display='none';                  
+  }, 4000);
+
+
+
+  
+
   let challenge_done = false;
   rep_counter_done.onclick = function() {
     challenge_done = true;
@@ -438,6 +499,7 @@ function detectPoseInRealTime(video, net) {
   canvas.height = videoHeight;
 
   async function poseDetectionFrame() {
+
 
     if (challenge_done){
       ctx.clearRect(0, 0, videoWidth, videoHeight);
@@ -623,12 +685,13 @@ function detectPoseInRealTime(video, net) {
               pullUps.startPositionTaken = false // save that we are waiting for getting to the start position again (hang loose)
               pullUps.pullUpCounter = pullUps.pullUpCounter + 1
               rep_counter_total.innerHTML = pullUps.pullUpCounter+"/"+challengereps;
+              rep_counter_total_done.innerHTML = pullUps.pullUpCounter+"/"+challengereps;
               rep_counter.innerHTML = pullUps.pullUpCounter
               rep_counter_background.style.display='block';        
               rep_counter.style.display='block';  
               
               setTimeout(function(){
-              //After the time is passed then I change the css display to block that appears the elements
+          
                 rep_counter_background.style.display='none';     
                 rep_counter.style.display='none';
                         
@@ -736,6 +799,9 @@ const databaseSubmitReps = async (reset = false) => {
  * available camera devices, and setting off the detectPoseInRealTime function.
  */
 export async function bindPage() {
+
+  
+  // button_new2.style.display = "block"
   
   pullUps_reset();
 
@@ -754,6 +820,9 @@ export async function bindPage() {
   
   document.getElementById("img_new_divider").style.display = "block"
   document.getElementById("logo").style.display = "block"
+
+
+  // HEREEEEEE
   let button_new = document.getElementById("img_new")
   button_new.style.display = "block"
   button_new.onclick = function() {
@@ -835,7 +904,60 @@ export async function bindPage() {
     function render_challenge_overview() {
       
       document.getElementById('img_accept_start').style.display = 'block';
+      
       document.getElementById('rules').style.display = 'block';
+
+      let button_get_notified = document.getElementById('button_get_notified')
+      button_get_notified.style.display = 'block';
+      const pushNotificationSuported = isPushNotificationSupported()
+      button_get_notified.onclick = function() {
+        // ask for permission
+        initializePushNotifications().then((message) => {
+          // register SW
+          registerServiceWorker().then((subscrition) => {
+            // subscribe
+            createNotificationSubscription();
+            // get subscription object
+            getUserSubscription().then(function(subscrition) {
+              if (subscrition) {
+                const body = { id, subscrition, opponent_me };
+                try {
+                  fetch('/.netlify/functions/handlePushNotificationSubscription', {
+                    method: 'POST',
+                    body: JSON.stringify(body),
+                  })
+                    .then(response => response.json())
+                    .then(data => {
+                      alert("You get notified when someone did the exercise or reopened the challenge.");
+                      // const body2 = { id, opponent_me };
+                      // fetch('/.netlify/functions/sendPushNotification', {
+                      //   method: 'POST',
+                      //   body: JSON.stringify(body),
+                      // }).then(response => console.log(response))
+                        
+                    })
+                  
+                } catch (error) {
+                  console.error(error);
+                }
+              }
+            });
+
+            
+            // if (reset==true){
+            //   reps = "-1,-1"
+            // } 
+          
+          
+            // const body = { id, reps };
+           
+
+          });
+      });
+        
+
+      }
+
       document.getElementById('opponents_selection').style.display = 'none';
       let button = document.getElementById('who_are_you').style.display = 'none';
       opponents_title = "OX<br> challenged OY!<br>RX RT!"
@@ -883,6 +1005,10 @@ export async function bindPage() {
         document.getElementById("opponents_reps_OYR").innerHTML = opponentsreps[1]
         document.getElementById("opponents_reps_OYR").style.color = "#ff5555ff";
       }
+
+      // # ------------------------------------------------------------------------------------------------------
+      // # Case: Both player played = Game Done
+      // # ------------------------------------------------------------------------------------------------------
       
       if (opponentsreps[0] != "-1" && opponentsreps[1] != "-1"){
         let opponentsreps_index_me = opponents.indexOf(opponent_me)
@@ -902,6 +1028,10 @@ export async function bindPage() {
           databaseSubmitReps(true);
           window.open(window.location.pathname+"?id="+id)
         }
+      
+      // # ------------------------------------------------------------------------------------------------------
+      // # Case: One Player didnt play yet = Game Open
+      // # ------------------------------------------------------------------------------------------------------
 
       }else{
         let button = document.getElementById("img_accept_start")

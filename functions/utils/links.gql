@@ -4,6 +4,7 @@ type Link {
     challengetype: String
     challengereps: String
     challengerules: String
+    opponentspushSubscriptions: String
 }
 
 # type Query {

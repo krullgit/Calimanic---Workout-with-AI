@@ -25,6 +25,8 @@ const SEARCH_LINK = `
                 challengetype
                 challengereps
                 challengerules
+                opponentspushSubscriptions
+                
              }
             }`;
 
@@ -32,6 +34,14 @@ const SEARCH_LINK = `
 const UPDATE_LINK = `
   mutation($id: ID!, $opponentsreps: String!) {
         updateLink(id: $id, data:{opponentsreps:$opponentsreps}) {
+            _id
+        }
+    }
+`;
+
+const UPDATE_opponentspushSubscriptions = `
+  mutation($id: ID!, $opponentspushSubscriptions: String!) {
+        updateLink(id: $id, data:{opponentspushSubscriptions:$opponentspushSubscriptions}) {
             _id
         }
     }
@@ -51,5 +61,6 @@ module.exports = {
     CREATE_LINK,
     UPDATE_LINK,
     DELETE_LINK,
-    SEARCH_LINK
+    SEARCH_LINK,
+    UPDATE_opponentspushSubscriptions
 };
