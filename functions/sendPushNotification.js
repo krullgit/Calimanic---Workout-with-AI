@@ -23,6 +23,8 @@ exports.handler = async (event) => {
         return formattedResponse(405, { err: 'Method not supported' });
     }
 
+    console.log("Got request")
+
     const { id, opponent_me} = JSON.parse(event.body);
     const variables = { id };
 
