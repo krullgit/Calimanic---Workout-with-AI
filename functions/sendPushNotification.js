@@ -80,6 +80,12 @@ exports.handler = async (event) => {
             opponentspushSubscriptions = opponentspushSubscriptions.substring(1, opponentspushSubscriptions.length);
             //console.log("b")
           }
+          while(opponentspushSubscriptions[opponentspushSubscriptions.length-1] === '"'){
+            console.log(opponentspushSubscriptions)
+            //console.log(opponentspushSubscriptions[i])
+            opponentspushSubscriptions = opponentspushSubscriptions.substring(0, opponentspushSubscriptions.length-1);
+            //console.log("b")
+          }
           //Do something
           
           console.log(6)
