@@ -49,7 +49,7 @@ exports.handler = async (event) => {
           // the subscription is weirdly formatted in graphql, so I hack something here to fix it
           opponentspushSubscriptions_old = opponentspushSubscriptions_old.map(s => s.replace(/\\/g, '')); // replace "\" with ""
           for (var i = 0; i < opponentspushSubscriptions_old.length; i++) {
-              while(opponentspushSubscriptions_old[0]== '"'){
+              while(opponentspushSubscriptions_old[i][0]== '"'){
                 opponentspushSubscriptions_old[i] = opponentspushSubscriptions_old[i].substring(1, opponentspushSubscriptions_old[i].length);
               }
               //Do something

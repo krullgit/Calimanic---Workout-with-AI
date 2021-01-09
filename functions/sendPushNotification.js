@@ -70,14 +70,14 @@ exports.handler = async (event) => {
           console.log(5)
           console.log(opponentspushSubscriptions)
           for (var i = 0; i < opponentspushSubscriptions.length; i++) {
-              while(opponentspushSubscriptions[0]== '"'){
+              while(opponentspushSubscriptions[i][0]== '"'){
                 opponentspushSubscriptions[i] = opponentspushSubscriptions[i].substring(1, opponentspushSubscriptions[i].length);
               }
               //Do something
           }
           console.log(6)
-          opponentspushSubscriptions = JSON.parse(opponentspushSubscriptions)
           console.log(opponentspushSubscriptions)
+          opponentspushSubscriptions = JSON.parse(opponentspushSubscriptions)
         
           let text = opponent_me + " did " + opponentsreps[opponents_index_me]+"/"+challengereps+" "+ challengetype
           let url = "https://thirsty-brattain-52b1a8.netlify.app/camera.html?id="+id
