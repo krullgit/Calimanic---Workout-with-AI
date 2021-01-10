@@ -377,6 +377,7 @@ const sendNoti = async () => {
     method: 'POST',
     body: JSON.stringify(body),
   })
+  console.log("sendNoti: " + res)
   console.log(res)
 }
 
@@ -415,7 +416,7 @@ function createPageDone() {
 
     databaseSubmitReps().then((messages) => {
      
-      console.log(opponent_me)
+      console.log("createPageDone "+ opponent_me)
       sendNoti();
       pullUps_reset();
       bindPage();
@@ -928,7 +929,7 @@ export async function bindPage() {
               if (subscrition) {
                 const body = { id, subscrition, opponent_me };
                 console.log("getUserSubscription")
-                console.log(opponent_me)
+                console.log("getUserSubscription"+ opponent_me)
                 try {
                   fetch('/.netlify/functions/handlePushNotificationSubscription', {
                     method: 'POST',
