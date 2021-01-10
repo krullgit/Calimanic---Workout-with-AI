@@ -412,6 +412,10 @@ function createPageDone() {
         method: 'POST',
         body: JSON.stringify(body),
       }).then(response => {
+        fetch('/.netlify/functions/sendPushNotification', {
+          method: 'POST',
+          body: JSON.stringify(body),
+        })
         console.log(response)
         pullUps_reset();
         bindPage();
