@@ -122,14 +122,19 @@ exports.handler = async (event) => {
             console.log(9)
             console.log(message)
             console.log(opponentspushSubscriptions)
+            console.log(10)
             //return formattedResponse(200, { message: text })
           })
+          console.log(11)
         }
+        console.log(12)
       }
+      console.log(13)
       
       
 
     } catch (err) {
+      console.log(14)
       console.error(err);
       return formattedResponse(500, { err: 'Something went wrong' });
     }
