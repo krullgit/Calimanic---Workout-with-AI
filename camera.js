@@ -145,7 +145,7 @@ const defaultQuantBytes = 2;
 
 const defaultMobileNetMultiplier = isMobile() ? 0.50 : 0.75;
 const defaultMobileNetStride = 16;
-const defaultMobileNetInputResolution = 500;
+const defaultMobileNetInputResolution = 250;
 
 const defaultResNetMultiplier = 1.0;
 const defaultResNetStride = 32;
