@@ -406,29 +406,18 @@ function createPageDone() {
   button_submit.onclick = function() {
 
     databaseSubmitReps().then((messages) => {
+     
       console.log(opponent_me)
       const body = { id, opponent_me };
       fetch('/.netlify/functions/sendPushNotification', {
         method: 'POST',
         body: JSON.stringify(body),
-      }).then(response => {
-        fetch('/.netlify/functions/sendPushNotification', {
-          method: 'POST',
-          body: JSON.stringify(body),
-        })
+      }).then((message) => {
+    
         console.log(response)
         pullUps_reset();
         bindPage();
-      })
-      // console.log(opponent_me)
-      // const body = { id, opponent_me };
-      // fetch('/.netlify/functions/sendPushNotification', {
-      //   method: 'POST',
-      //   body: JSON.stringify(body),
-      // })
-      // console.log(response)
-      // pullUps_reset();
-      // bindPage();
+      });
     })
   }
 }
