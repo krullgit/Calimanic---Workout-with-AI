@@ -113,13 +113,15 @@ exports.handler = async (event) => {
               icon: "/images/user_1.png",
               badge: "/images/user_1.png"
             })
-          )
-          console.log(9)
-          console.log(opponentspushSubscriptions)
+          ).then(() => {
+            console.log(9)
+            console.log(opponentspushSubscriptions)
+            return formattedResponse(200, { message: 'Everbody notified' })
+          })
         }
       }
       
-      return formattedResponse(200, { message: 'Everbody notified' })
+      
 
     } catch (err) {
       console.error(err);
