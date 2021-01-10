@@ -50,6 +50,7 @@ exports.handler = async (event) => {
         challengetype = "Pullups"
       }
       let challengereps = String(res_1.findLinkByID.challengereps)
+      let text;
 
       if (opponentspushSubscriptions != null){
         opponentspushSubscriptions = opponentspushSubscriptions.split("PULLUPDIVIDER")
@@ -101,7 +102,7 @@ exports.handler = async (event) => {
           var datetime =  currentdate.getHours() + ":"  
                           + currentdate.getMinutes() + ":" 
                           + currentdate.getSeconds();
-          let text = datetime + " " + opponent_me + " did " + opponentsreps[opponents_index_me]+"/"+challengereps+" "+ challengetype
+          text = datetime + " " + opponent_me + " did " + opponentsreps[opponents_index_me]+"/"+challengereps+" "+ challengetype
           let url = "https://thirsty-brattain-52b1a8.netlify.app/camera.html?id="+id
 
           console.log(8)
@@ -109,7 +110,7 @@ exports.handler = async (event) => {
           console.log(8.5)
           console.log(text)
 
-          webpush
+          let test = await webpush
           .sendNotification(
             opponentspushSubscriptions,
             JSON.stringify({
@@ -117,26 +118,27 @@ exports.handler = async (event) => {
               url: url
               // icon: "/images/user_1.png",
               // badge: "/images/user_1.png"
-            })
-          ).then((message) => {
+            })).then((message) => {
             console.log(9)
             console.log(message)
             console.log(opponentspushSubscriptions)
             console.log(10)
-            //return formattedResponse(200, { message: text })
+            
           })
           console.log(11)
         }
         console.log(12)
       }
       console.log(13)
-      
+      console.log(text)
+      return formattedResponse(200, { message: text })
+      //return formattedResponse(202, { stat: 'Something went wrongggs' });
       
 
     } catch (err) {
       console.log(14)
       console.error(err);
-      return formattedResponse(500, { err: 'Something went wrong' });
+      return formattedResponse(500, { err: 'Something went wrongg' });
     }
 
     

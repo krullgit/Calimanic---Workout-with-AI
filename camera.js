@@ -378,7 +378,7 @@ const sendNoti = async () => {
     body: JSON.stringify(body),
   })
   console.log("sendNoti: " + res)
-  console.log(res)
+  console.log(res.text())
 }
 
 
