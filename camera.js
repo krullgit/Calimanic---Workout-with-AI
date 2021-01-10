@@ -414,7 +414,7 @@ function createPageDone() {
         body: JSON.stringify(body),
       }).then((message) => {
     
-        console.log(response)
+
         pullUps_reset();
         bindPage();
       });
