@@ -406,7 +406,7 @@ function createPageDone() {
   button_submit.onclick = function() {
 
     databaseSubmitReps().then((messages) => {
-
+      console.log(opponent_me)
       const body = { id, opponent_me };
       fetch('/.netlify/functions/sendPushNotification', {
         method: 'POST',
@@ -896,7 +896,8 @@ export async function bindPage() {
           render_challenge_overview()
         }  
       }
-    } else {      opponent_me = param_me
+    } else {      
+      opponent_me = param_me
       
       render_challenge_overview()
     }
@@ -922,6 +923,8 @@ export async function bindPage() {
             getUserSubscription().then(function(subscrition) {
               if (subscrition) {
                 const body = { id, subscrition, opponent_me };
+                console.log("getUserSubscription")
+                console.log(opponent_me)
                 try {
                   fetch('/.netlify/functions/handlePushNotificationSubscription', {
                     method: 'POST',
