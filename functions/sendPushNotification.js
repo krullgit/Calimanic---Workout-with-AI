@@ -118,8 +118,9 @@ exports.handler = async (event) => {
               // icon: "/images/user_1.png",
               // badge: "/images/user_1.png"
             })
-          ).then(() => {
+          ).then((message) => {
             console.log(9)
+            console.log(message)
             console.log(opponentspushSubscriptions)
             return formattedResponse(200, { message: 'Everbody notified' })
           })
