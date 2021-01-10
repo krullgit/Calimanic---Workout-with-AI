@@ -101,6 +101,8 @@ exports.handler = async (event) => {
 
           console.log(8)
           console.log(opponentspushSubscriptions)
+          console.log(8.5)
+          console.log(text)
 
           webpush
           .sendNotification(
