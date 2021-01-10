@@ -95,8 +95,13 @@ exports.handler = async (event) => {
           opponentspushSubscriptions = JSON.parse(opponentspushSubscriptions)
           console.log(7)
           console.log(opponentspushSubscriptions)
-        
-          let text = opponent_me + " did " + opponentsreps[opponents_index_me]+"/"+challengereps+" "+ challengetype
+
+
+          var currentdate = new Date(); 
+          var datetime =  currentdate.getHours() + ":"  
+                          + currentdate.getMinutes() + ":" 
+                          + currentdate.getSeconds();
+          let text = datetime + " " + opponent_me + " did " + opponentsreps[opponents_index_me]+"/"+challengereps+" "+ challengetype
           let url = "https://thirsty-brattain-52b1a8.netlify.app/camera.html?id="+id
 
           console.log(8)
