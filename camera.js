@@ -371,6 +371,13 @@ function setupFPS() {
  * happens. This function loops with a requestAnimationFrame method.
  */
 
+const sendNoti = async () => {
+  const body = { id, opponent_me };
+  const res = await fetch('/.netlify/functions/sendPushNotification', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
+}
 
 
 function createPageDone() {
@@ -408,16 +415,10 @@ function createPageDone() {
     databaseSubmitReps().then((messages) => {
      
       console.log(opponent_me)
-      const body = { id, opponent_me };
-      fetch('/.netlify/functions/sendPushNotification', {
-        method: 'POST',
-        body: JSON.stringify(body),
-      }).then((message) => {
-        console.log(message)
-
-        pullUps_reset();
-        bindPage();
-      });
+      sendNoti();
+      pullUps_reset();
+      bindPage();
+    
     })
   }
 }
