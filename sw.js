@@ -5,7 +5,7 @@ function receivePushNotification(event) {
     
     // const { image, tag, url, title, text } = event.data.json();
     const { title, url } = event.data.json();
-    console.log(title);
+    console.log("push: "+ title);
   
     // const options = {
     //   data: url,
