@@ -109,9 +109,9 @@ exports.handler = async (event) => {
             opponentspushSubscriptions,
             JSON.stringify({
               title: text,
-              url: url,
-              icon: "/images/user_1.png",
-              badge: "/images/user_1.png"
+              url: url
+              // icon: "/images/user_1.png",
+              // badge: "/images/user_1.png"
             })
           ).then(() => {
             console.log(9)
