@@ -154,7 +154,7 @@ const defaultResNetStride = 32;
 const defaultResNetInputResolution = 250;
 
 const guiState = {
-  algorithm: 'multi-pose',
+  algorithm: 'single-pose',
   input: {
     architecture: 'MobileNetV1',
     outputStride: defaultMobileNetStride,
@@ -664,6 +664,7 @@ function detectPoseInRealTime(video, net) {
           pullUps.shoulderWidth.shift();
           const average = arr => arr.reduce( ( p, c ) => p + c, 0 ) / arr.length;
           const shoulderWidthMean = Math.abs(average(pullUps.shoulderWidth));
+          
 
           // look if wrists are shoulder mean higher than Nose
           
@@ -676,9 +677,21 @@ function detectPoseInRealTime(video, net) {
           // check if we are already in start position (hands at bar)
           if (pullUps.startPositionTaken == false){
 
+            let cond_wrists_high_enough_y = (LeftWristY < NoseY-shoulderWidthMean*1.3) && (RightWirstY < NoseY-shoulderWidthMean*1.3)
+            let cond_wrists_far_enough_apart_x = Math.abs(LeftWristX-RightWirstX) > (shoulderWidthMean*0.6)
+            let cond_wrists_not_too_far_enough_apart_y = Math.abs(LeftWristY-RightWirstY) < (shoulderWidthMean*0.3)
+            console.log(1)
+            console.log(cond_wrists_high_enough_y)
+            console.log(cond_wrists_far_enough_apart_x)
+            console.log(cond_wrists_not_too_far_enough_apart_y)
             // check if hands are high enough
-            if ((LeftWristY < NoseY-shoulderWidthMean*1) && (RightWirstY < NoseY-shoulderWidthMean*1)){
+            if (cond_wrists_high_enough_y && cond_wrists_far_enough_apart_x&& cond_wrists_not_too_far_enough_apart_y){
               console.log("startPositionTaken")
+              console.log(LeftWristX)
+              console.log(RightWirstX)
+              console.log(shoulderWidthMean*0.6)
+              console.log("shoulderWidthMean: " + shoulderWidthMean)
+
               pullUps.startPositionTaken = true // save that we reached start position
 
               // save wrist postitions 
@@ -696,7 +709,10 @@ function detectPoseInRealTime(video, net) {
             }
           // we are already at start position and weight for the pull pull up
           }else{
-            if (((pullUps.startPositionPosition[1]+pullUps.startPositionPosition[3])/2 > NoseY)){
+            let cond_head_high_enough_y = (pullUps.startPositionPosition[1]+pullUps.startPositionPosition[3])/2 > NoseY
+          
+            if (cond_head_high_enough_y){
+              
               pullUps.startPositionTaken = false // save that we are waiting for getting to the start position again (hang loose)
               pullUps.startPositionPositionLeftWrist = 0 
               pullUps.startPositionPositionRightWrist = 0
