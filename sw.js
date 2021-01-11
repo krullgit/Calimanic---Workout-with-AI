@@ -1,9 +1,10 @@
 
 function receivePushNotification(event) {
     console.log("[Service Worker] Push Received.");
+    console.log(event.data);
     
     // const { image, tag, url, title, text } = event.data.json();
-    let { title, url, text } = event.data.json();
+    const { title, url, text } = event.data.json();
   
     // const options = {
     //   data: url,
@@ -19,14 +20,11 @@ function receivePushNotification(event) {
     const options = {
       data: url,
       body: text,
-      icon: "/dist/icon_winner.c7d36301.png",
-      badge: "/dist/icon_winner.c7d36301.png",
       actions: [{ action: "Detail", title: "View", icon: "https://via.placeholder.com/128/ff0000" }]
     };
-    title = "😀" + " "+  title
     event.waitUntil(self.registration.showNotification(title, options));
   }
-  
+    
   function openPushNotification(event) {
     console.log("[Service Worker] Notification click Received.", event.notification.data);
     

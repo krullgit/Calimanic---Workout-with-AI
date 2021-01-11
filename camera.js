@@ -19,7 +19,7 @@ import dat from 'dat.gui';
 import Stats from 'stats.js';
 //dwsd
 
-import {drawBoundingBox, drawKeypoints, drawSkeleton, isMobile, toggleLoadingUI, tryResNetButtonName, tryResNetButtonText, updateTryResNetButtonDatGuiCss} from './demo_util';
+import {drawBoundingBox, drawKeypoints, drawSkeleton, isMobile, toggleLoadingUI, tryResNetButtonName, tryResNetButtonText, updateTryResNetButtonDatGuiCss, drawSegment, toTuple} from './demo_util';
 
 const bspurl = "http://localhost:8888/camera.html?id=286629219312599553&O=Matthes"
 const videoWidth = 600;
@@ -59,6 +59,8 @@ function pullUps_reset() {
     startPositionPosition: [],
     shoulderWidth: [],
     pullUpCounter: 0,
+    startPositionPositionLeftWrist: 0,
+    startPositionPositionRightWrist: 0
   }
 }
 
@@ -675,7 +677,7 @@ function detectPoseInRealTime(video, net) {
           if (pullUps.startPositionTaken == false){
 
             // check if hands are high enough
-            if ((LeftWristY < NoseY-shoulderWidthMean*1.5) && (RightWirstY < NoseY-shoulderWidthMean*1.5)){
+            if ((LeftWristY < NoseY-shoulderWidthMean*1) && (RightWirstY < NoseY-shoulderWidthMean*1)){
               console.log("startPositionTaken")
               pullUps.startPositionTaken = true // save that we reached start position
 
@@ -685,12 +687,19 @@ function detectPoseInRealTime(video, net) {
               pullUps.startPositionPosition.push(LeftWristY);
               pullUps.startPositionPosition.push(RightWirstX);
               pullUps.startPositionPosition.push(RightWirstY);
+
+              // show wrists start positions 
+              pullUps.startPositionPositionLeftWrist = LeftWrist;
+              pullUps.startPositionPositionRightWrist = RightWirst;
+            
               
             }
           // we are already at start position and weight for the pull pull up
           }else{
             if (((pullUps.startPositionPosition[1]+pullUps.startPositionPosition[3])/2 > NoseY)){
               pullUps.startPositionTaken = false // save that we are waiting for getting to the start position again (hang loose)
+              pullUps.startPositionPositionLeftWrist = 0 
+              pullUps.startPositionPositionRightWrist = 0
               pullUps.pullUpCounter = pullUps.pullUpCounter + 1
               rep_counter_total.innerHTML = pullUps.pullUpCounter+"/"+challengereps;
               rep_counter_total_done.innerHTML = pullUps.pullUpCounter+"/"+challengereps;
@@ -698,7 +707,9 @@ function detectPoseInRealTime(video, net) {
               rep_counter_background.style.display='block';        
               rep_counter.style.display='block';  
               
+              
               setTimeout(function(){
+                
           
                 rep_counter_background.style.display='none';     
                 rep_counter.style.display='none';
@@ -718,9 +729,20 @@ function detectPoseInRealTime(video, net) {
 
       if (score >= minPoseConfidence) {
         if (guiState.output.showPoints) {
-          drawKeypoints(keypoints, minPartConfidence, ctx);
+          if (pullUps.startPositionPositionLeftWrist != 0){
+            let keypoint_start = [pullUps.startPositionPositionLeftWrist, pullUps.startPositionPositionRightWrist]
+            drawKeypoints(keypoint_start, minPartConfidence, ctx,1, "#ffffff", 7);
+          }
+          drawKeypoints(keypoints, minPartConfidence, ctx, 1, "#74ffc4", 3);
         }
         if (guiState.output.showSkeleton) {
+          if (pullUps.startPositionPositionLeftWrist != 0){
+            let keypoint_start = [pullUps.startPositionPositionLeftWrist, pullUps.startPositionPositionRightWrist]
+            drawSegment(
+              toTuple(pullUps.startPositionPositionLeftWrist.position), toTuple(pullUps.startPositionPositionRightWrist.position), "#ffffff",
+              1, ctx);
+            drawKeypoints(keypoint_start, minPartConfidence, ctx,1, "#ffffff", 7);
+          }
           drawSkeleton(keypoints, minPartConfidence, ctx);
         }
         if (guiState.output.showBoundingBox) {
@@ -939,7 +961,8 @@ export async function bindPage() {
         // ask for permission
         initializePushNotifications().then((message) => {
           // register SW
-          registerServiceWorker().then((subscrition) => {
+          registerServiceWorker().then((registration) => {
+            
             // subscribe
             createNotificationSubscription();
             // get subscription object
@@ -978,7 +1001,7 @@ export async function bindPage() {
           
             // const body = { id, reps };
            
-
+            registration.update()
           });
       });
         

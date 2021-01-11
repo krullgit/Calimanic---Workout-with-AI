@@ -106,26 +106,55 @@ exports.handler = async (event) => {
             // console.log(6)
             // console.log(opponentspushSubscriptions)
             opponentspushSubscriptions = JSON.parse(opponentspushSubscriptions)
-            // console.log(7)
-            // console.log(opponentspushSubscriptions)
+            console.log(7)
+            console.log(opponentspushSubscriptions)
 
             var currentdate = new Date(); 
             var datetime =  currentdate.getHours() + ":"  
                               + currentdate.getMinutes() + ":"
-            if(mode == "reset"){
-              title = datetime + " " +opponent_me + " reopened the challenge."
 
-              text = "Last result: ["+opponents[0]+", "+opponents[1]+"], ["+opponentsreps[0]+", "+opponentsreps[1]+"]";
+            
+            // get the correct emoji
+            let emoji_me = "";
+            let emoji_0 = "";
+            let emoji_1 = "";
+            if (opponentsreps[0] != "-1" && opponentsreps[1] != "-1"){
+              if (opponentsreps[opponents_index_me] == challengereps){
+                emoji_me = "🥇 ";
+              } else{
+                emoji_me = "🥈 ";
+              }
+              if (opponentsreps[0] == challengereps){
+                emoji_0 = "🥇";
+              } else{
+                emoji_0 = "🥈";
+              }
+              if (opponentsreps[1] == challengereps){
+                emoji_1 = "🥇";
+              } else{
+                emoji_1 = "🥈";
+              }
+                
+            }
+
+            if(mode == "reset"){
+              title = "🏋 " + datetime + " " +opponent_me + " reopened the challenge."
+              text = "Result: " + emoji_0 + opponents[0]+": "+opponentsreps[0]+", "+emoji_1+opponents[1]+": "+ opponentsreps[1];
               
             }else{
               
-              title = datetime + " " + opponent_me + " did " + opponentsreps[opponents_index_me]+"/"+challengereps+" "+ challengetype
-              text = ""
+              title = "🏋 " + datetime + " " + opponent_me + " did " + opponentsreps[opponents_index_me]+"/"+challengereps+" "+ challengetype
+              if (opponentsreps[0] != "-1" && opponentsreps[1] != "-1"){
+                text = "Your medal: " + emoji_me
+              }else{
+                text = ""
+              }
             }
 
-            console.log("11")
+            console.log(8)
             console.log(title)
             console.log(text)
+            
 
             url = "https://thirsty-brattain-52b1a8.netlify.app/camera.html?id="+id
             let test = await webpush
@@ -143,6 +172,8 @@ exports.handler = async (event) => {
               // console.log(opponentspushSubscriptions)
               // console.log(10)
             })
+            console.log(9)
+            console.log(text)
 
         }
         // console.log(12)

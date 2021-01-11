@@ -71,7 +71,7 @@ export function toggleLoadingUI(
   }
 }
 
-function toTuple({y, x}) {
+export function toTuple({y, x}) {
   return [y, x];
 }
 
@@ -111,7 +111,9 @@ export function drawSkeleton(keypoints, minConfidence, ctx, scale = 1) {
 /**
  * Draw pose keypoints onto a canvas
  */
-export function drawKeypoints(keypoints, minConfidence, ctx, scale = 1) {
+export function drawKeypoints(keypoints, minConfidence, ctx, scale = 1, color = "aqua", radius = 3) {
+  let point_color = color
+  let point_radius = radius
   for (let i = 0; i < keypoints.length; i++) {
     const keypoint = keypoints[i];
 
@@ -120,7 +122,7 @@ export function drawKeypoints(keypoints, minConfidence, ctx, scale = 1) {
     }
 
     const {y, x} = keypoint.position;
-    drawPoint(ctx, y * scale, x * scale, 3, color);
+    drawPoint(ctx, y * scale, x * scale, point_radius, point_color);
   }
 }
 
