@@ -912,8 +912,18 @@ export async function bindPage() {
     
 
     function render_challenge_overview() {
+
+      let opponentsreps_index_me = opponents.indexOf(opponent_me)
+      let opponentsreps_me = opponentsreps[opponentsreps_index_me]
+
+      if (opponentsreps_me != -1){
+        
+        document.getElementById('img_accept_start_retry').style.display = 'block';
+      }else{
+        document.getElementById('img_accept_start').style.display = 'block';
+      }
       
-      document.getElementById('img_accept_start').style.display = 'block';
+
       
       document.getElementById('rules').style.display = 'block';
 
@@ -1023,8 +1033,6 @@ export async function bindPage() {
       // # ------------------------------------------------------------------------------------------------------
       
       if (opponentsreps[0] != "-1" && opponentsreps[1] != "-1"){
-        let opponentsreps_index_me = opponents.indexOf(opponent_me)
-        let opponentsreps_me = opponentsreps[opponentsreps_index_me]
         document.getElementById('img_accept_start').style.display = 'None';
         
         if (opponentsreps_me != challengereps){
@@ -1046,7 +1054,12 @@ export async function bindPage() {
       // # ------------------------------------------------------------------------------------------------------
 
       }else{
-        let button = document.getElementById("img_accept_start")
+        let button;
+        if (document.getElementById("img_accept_start").style.display == "block"){
+          button = document.getElementById("img_accept_start")
+        }else{
+          button = document.getElementById("img_accept_start_retry")
+        }
         button.onclick = function() {
           const url = new URL(window.location.href);
           url.searchParams.set('mode', "challenge");
