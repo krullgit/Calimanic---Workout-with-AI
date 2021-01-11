@@ -1,11 +1,11 @@
 
 function receivePushNotification(event) {
     console.log("[Service Worker] Push Received.");
-    console.log(event.data);
+    //console.log(event.data);
     
     // const { image, tag, url, title, text } = event.data.json();
     const { title, url } = event.data.json();
-    console.log("push: "+ title);
+    //console.log("push: "+ title);
   
     // const options = {
     //   data: url,
@@ -17,6 +17,7 @@ function receivePushNotification(event) {
     //   badge: "https://spyna.it/icons/favicon.ico",
     //   actions: [{ action: "Detail", title: "View", icon: "https://via.placeholder.com/128/ff0000" }]
     // };
+    title = "😀" + " " + title;
     const options = {
       data: url,
       icon: "/dist/user_1.c36dbd92.png",
