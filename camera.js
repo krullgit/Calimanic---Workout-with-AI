@@ -26,7 +26,7 @@ const videoWidth = 600;
 const videoHeight = 500;
 const stats = new Stats();
 const gui = new dat.GUI({width: 300});
-dat.GUI.toggleHide();
+// dat.GUI.toggleHide();
 let video_object = null;
 let net = null;
 let processing_active = false; // this cariable is needed to deactivate the processing when the back button is triggered
@@ -145,7 +145,8 @@ async function loadVideo() {
 
 const defaultQuantBytes = 2;
 
-const defaultMobileNetMultiplier = isMobile() ? 0.50 : 0.75;
+const defaultMobileNetMultiplier = 1.0;
+// const defaultMobileNetMultiplier = isMobile() ? 0.50 : 0.75;
 const defaultMobileNetStride = 16;
 const defaultMobileNetInputResolution = 250;
 
@@ -154,9 +155,9 @@ const defaultResNetStride = 32;
 const defaultResNetInputResolution = 250;
 
 const guiState = {
-  algorithm: 'single-pose',
+  algorithm: 'multi-pose',
   input: {
-    architecture: 'MobileNetV1',
+    architecture: 'MobileNetV1', // ResNet50, MobileNetV1
     outputStride: defaultMobileNetStride,
     inputResolution: defaultMobileNetInputResolution,
     multiplier: defaultMobileNetMultiplier,
@@ -167,12 +168,13 @@ const guiState = {
     minPartConfidence: 0.5,
   },
   multiPoseDetection: {
-    maxPoseDetections: 5,
+    maxPoseDetections: 1,
     minPoseConfidence: 0.15,
     minPartConfidence: 0.1,
     nmsRadius: 30.0,
   },
   output: {
+    showVideo: true,
     showVideo: true,
     showSkeleton: true,
     showPoints: true,
