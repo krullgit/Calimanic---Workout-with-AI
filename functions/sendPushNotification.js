@@ -37,14 +37,14 @@ exports.handler = async (event) => {
       );
       // check which index the requester has in our database
       let opponents = res_1.findLinkByID.opponents.split(",").map(s => s.trim())
-      console.log(opponents)
-      console.log(opponent_me)
+      // console.log(opponents)
+      // console.log(opponent_me)
       let opponents_index_me = opponents.indexOf(opponent_me.trim())
-      console.log(opponents_index_me)
+      // console.log(opponents_index_me)
       let opponentspushSubscriptions = JSON.stringify(res_1.findLinkByID.opponentspushSubscriptions)
 
       let opponentsreps = String(res_1.findLinkByID.opponentsreps).split(",").map(s => s.trim())
-      console.log(opponentspushSubscriptions)
+      // console.log(opponentspushSubscriptions)
       let challengetype = String(res_1.findLinkByID.challengetype)
       if (challengetype == "pullup"){
         challengetype = "Pullups"
@@ -55,28 +55,28 @@ exports.handler = async (event) => {
       if (opponentspushSubscriptions != null){
         opponentspushSubscriptions = opponentspushSubscriptions.split("PULLUPDIVIDER")
         if (opponentspushSubscriptions.length>1){
-          console.log(1)
-          console.log(opponentspushSubscriptions)
+          // console.log(1)
+          // console.log(opponentspushSubscriptions)
           if (opponents_index_me == 0){
-            console.log(2)
-            console.log(opponentspushSubscriptions)
+            // console.log(2)
+            // console.log(opponentspushSubscriptions)
             opponentspushSubscriptions = opponentspushSubscriptions[1]
           } else if(opponents_index_me == 1){
-            console.log(3)
-            console.log(opponentspushSubscriptions)
+            // console.log(3)
+            // console.log(opponentspushSubscriptions)
             opponentspushSubscriptions = opponentspushSubscriptions[0]
           }
-          console.log(4)
-          console.log(opponentspushSubscriptions)
+          // console.log(4)
+          // console.log(opponentspushSubscriptions)
           // the subscription is weirdly formatted in graphql, so I hack something here to fix it
           opponentspushSubscriptions = opponentspushSubscriptions.replace(/\\/g, ''); // replace "\" with ""
-          console.log(5)
-          console.log(opponentspushSubscriptions)
+          // console.log(5)
+          // console.log(opponentspushSubscriptions)
           
 
-          console.log("aaaa")
-          console.log(opponentspushSubscriptions)
-          console.log(opponentspushSubscriptions[0])
+          // console.log("aaaa")
+          // console.log(opponentspushSubscriptions)
+          // console.log(opponentspushSubscriptions[0])
           while(opponentspushSubscriptions[0]=== '"'){
             console.log(opponentspushSubscriptions)
             //console.log(opponentspushSubscriptions[i])
@@ -91,11 +91,11 @@ exports.handler = async (event) => {
           }
           //Do something
           
-          console.log(6)
-          console.log(opponentspushSubscriptions)
+          // console.log(6)
+          // console.log(opponentspushSubscriptions)
           opponentspushSubscriptions = JSON.parse(opponentspushSubscriptions)
-          console.log(7)
-          console.log(opponentspushSubscriptions)
+          // console.log(7)
+          // console.log(opponentspushSubscriptions)
 
 
           var currentdate = new Date(); 
@@ -105,10 +105,10 @@ exports.handler = async (event) => {
           text = datetime + " " + opponent_me + " did " + opponentsreps[opponents_index_me]+"/"+challengereps+" "+ challengetype
           let url = "https://thirsty-brattain-52b1a8.netlify.app/camera.html?id="+id
 
-          console.log(8)
-          console.log(opponentspushSubscriptions)
-          console.log(8.5)
-          console.log(text)
+          // console.log(8)
+          // console.log(opponentspushSubscriptions)
+          // console.log(8.5)
+          // console.log(text)
 
           let test = await webpush
           .sendNotification(
@@ -119,18 +119,18 @@ exports.handler = async (event) => {
               // icon: "/images/user_1.png",
               // badge: "/images/user_1.png"
             })).then((message) => {
-            console.log(9)
-            console.log(message)
-            console.log(opponentspushSubscriptions)
-            console.log(10)
+            // console.log(9)
+            // console.log(message)
+            // console.log(opponentspushSubscriptions)
+            // console.log(10)
             
           })
-          console.log(11)
+          // console.log(11)
         }
-        console.log(12)
+        // console.log(12)
       }
-      console.log(13)
-      console.log(text)
+      // console.log(13)
+      // console.log(text)
       return formattedResponse(200, { message: text })
       //return formattedResponse(202, { stat: 'Something went wrongggs' });
       

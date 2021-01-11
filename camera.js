@@ -751,7 +751,9 @@ const databaseQueryID = async () => {
     const links = await res.json();
     try {
       opponents = String(links.findLinkByID.opponents).split(",").map(s => s.trim())
+      console.log(links.findLinkByID.opponentsreps)
       opponentsreps = String(links.findLinkByID.opponentsreps).split(",").map(s => s.trim())
+      console.log(opponentsreps)
       let challengetype = String(links.findLinkByID.challengetype)
       challengereps = String(links.findLinkByID.challengereps)
       let challengerules = String(links.findLinkByID.challengerules)
@@ -777,16 +779,17 @@ const databaseSubmitReps = async (reset = false) => {
   
   param_me_update = true
 
-  let opponentsreps_index_me = opponents.indexOf(opponent_me)
-  opponentsreps[opponentsreps_index_me] = pullUps.pullUpCounter
-  let reps = String(opponentsreps[0]+","+opponentsreps[1])
+  // let opponentsreps_index_me = opponents.indexOf(opponent_me)
+  // opponentsreps[opponentsreps_index_me] = pullUps.pullUpCounter
+  // let reps = String(opponentsreps[0]+","+opponentsreps[1])
+
+  let reps = String(pullUps.pullUpCounter)
 
   if (reset==true){
     reps = "-1,-1"
   } 
 
-
-  const body = { id, reps };
+  const body = { id, reps, opponent_me };
   try {
     const res = await fetch('/.netlify/functions/updateLinks', {
       method: 'PUT',
