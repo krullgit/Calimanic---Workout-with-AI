@@ -371,8 +371,10 @@ function setupFPS() {
  * happens. This function loops with a requestAnimationFrame method.
  */
 
-const sendNoti = async () => {
-  const body = { id, opponent_me };
+const sendNoti = async (mode="normal") => {
+
+  const body = { id, opponent_me, mode};
+  console.log(body)
   const res = await fetch('/.netlify/functions/sendPushNotification', {
     method: 'POST',
     body: JSON.stringify(body),
@@ -800,6 +802,7 @@ const databaseSubmitReps = async (reset = false) => {
   } catch (error) {
     console.error(error);
   }
+  return "databaseSubmitReps done"
 };
 
 
@@ -869,6 +872,8 @@ export async function bindPage() {
   databaseQueryID().then((messages) => {
     let opponents = messages[0]
     let opponentsreps = messages[1]
+    console.log("1111")
+    console.log(opponentsreps)
     let challengetype = messages[2]
     let challengereps = messages[3]
     let challengerules = messages[4]
@@ -1034,6 +1039,7 @@ export async function bindPage() {
       
       if (opponentsreps[0] != "-1" && opponentsreps[1] != "-1"){
         document.getElementById('img_accept_start').style.display = 'None';
+        document.getElementById('img_accept_start_retry').style.display = 'None';
         
         if (opponentsreps_me != challengereps){
           document.getElementById('img_looser').style.display = 'block';
@@ -1045,8 +1051,10 @@ export async function bindPage() {
 
         let button_reopen = document.getElementById('img_reopen')
         button_reopen.onclick = function() {
+
           databaseSubmitReps(true);
-          window.open(window.location.pathname+"?id="+id)
+          sendNoti("reset");
+          bindPage();
         }
       
       // # ------------------------------------------------------------------------------------------------------
