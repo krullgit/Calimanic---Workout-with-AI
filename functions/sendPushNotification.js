@@ -101,7 +101,7 @@ exports.handler = async (event) => {
           var currentdate = new Date(); 
           var datetime =  currentdate.getHours() + ":"  
                           + currentdate.getMinutes() + ":" 
-                          + currentdate.getSeconds();
+                    
           text = datetime + " " + opponent_me + " did " + opponentsreps[opponents_index_me]+"/"+challengereps+" "+ challengetype
           let url = "https://thirsty-brattain-52b1a8.netlify.app/camera.html?id="+id
 

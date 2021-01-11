@@ -19,6 +19,8 @@ function receivePushNotification(event) {
     // };
     const options = {
       data: url,
+      icon: "/images/user_1.png",
+      badge: "/images/user_1.png",
       actions: [{ action: "Detail", title: "View", icon: "https://via.placeholder.com/128/ff0000" }]
     };
     event.waitUntil(self.registration.showNotification(title, options));
