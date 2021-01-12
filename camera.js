@@ -1095,7 +1095,7 @@ export async function bindPage() {
 
           databaseSubmitReps(true);
           sendNoti("reset");
-          bindPage();
+          location.reload();
         }
       
       // # ------------------------------------------------------------------------------------------------------

@@ -13,7 +13,6 @@ const databaseQueryID = async () => {
             body: JSON.stringify(body),
         });
         const links = await res.json();
-        console.log(links)
         let id = String(links._id)
         return [id]
     } catch (error) {

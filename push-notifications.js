@@ -60,7 +60,6 @@ var createNotificationSubscription = function createNotificationSubscription() {
       applicationServerKey: pushServerPublicKey
     })
     .then(function(subscription) {
-      console.log("User is subscribed.", subscription);
       return subscription;
     });
   });

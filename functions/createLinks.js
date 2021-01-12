@@ -6,11 +6,9 @@ const sendQuery = require('./utils/sendQuery');
 const formattedResponse = require('./utils/formattedResponse');
 
 exports.handler = async (event) => {
-    //console.log(event)
     const {opponents, opponentsreps, challengetype, challengereps} = JSON.parse(event.body);
     
     const variables = {opponents, opponentsreps, challengetype, challengereps};
-    console.log(variables)
     try {
         const { createLink: createdLink } = await sendQuery(
             CREATE_LINK,
