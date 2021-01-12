@@ -43,6 +43,8 @@ var opponent_me;
 var param_me_update = false;
 var id;
 
+let opponentsreps_me_backup;
+
 import {
   isPushNotificationSupported,
   initializePushNotifications,
@@ -378,13 +380,12 @@ function setupFPS() {
 const sendNoti = async (mode="normal") => {
 
   const body = { id, opponent_me, mode};
-  console.log(body)
   const res = await fetch('/.netlify/functions/sendPushNotification', {
     method: 'POST',
     body: JSON.stringify(body),
   })
-  console.log("sendNoti: " + res)
-  console.log(res.text())
+  // console.log("sendNoti: " + res)
+  // console.log(res.text())
 }
 
 
@@ -411,21 +412,63 @@ function createPageDone() {
   let button_retry = document.getElementById("button_retry")
   button_retry.onclick = function() {
     pullUps_reset();
+
+    // here we check if the challenge was meanwhile reset by another player
+    // This prevents making the challenge although the game is closed already
+    // in this case we alert the user and reset the page
+    databaseQueryID().then((messages) => {
+      let opponents = messages[0]
+      let opponentsreps = messages[1]
+      let opponentsreps_index_me = opponents.indexOf(opponent_me)
+      let opponentsreps_me = opponentsreps[opponentsreps_index_me]
+      if (opponentsreps_me_backup != opponentsreps_me){
+        alert("Another player reset the challenge. Page is reloaded.")
+        location.reload();
+      }
+    })
+    
     fromStartToChallenge(net)
   }
   let button_thisneverhappened = document.getElementById("button_thisneverhappened")
   button_thisneverhappened.onclick = function() {
+    // here we check if the challenge was meanwhile reset by another player
+    // This prevents making the challenge although the game is closed already
+    // in this case we alert the user and reset the page
+    databaseQueryID().then((messages) => {
+      let opponents = messages[0]
+      let opponentsreps = messages[1]
+      let opponentsreps_index_me = opponents.indexOf(opponent_me)
+      let opponentsreps_me = opponentsreps[opponentsreps_index_me]
+      if (opponentsreps_me_backup != opponentsreps_me){
+        alert("Another player reset the challenge. Page is reloaded.")
+        location.reload();
+      }
+    })
     bindPage()
   }
   let button_submit = document.getElementById("button_submit")
   button_submit.onclick = function() {
 
+    // here we check if the challenge was meanwhile reset by another player
+    // This prevents making the challenge although the game is closed already
+    // in this case we alert the user and reset the page
+    databaseQueryID().then((messages) => {
+      let opponents = messages[0]
+      let opponentsreps = messages[1]
+      let opponentsreps_index_me = opponents.indexOf(opponent_me)
+      let opponentsreps_me = opponentsreps[opponentsreps_index_me]
+      if (opponentsreps_me_backup != opponentsreps_me){
+        alert("Another player reset the challenge. Page is reloaded.")
+        location.reload();
+      }
+    })
+
     databaseSubmitReps().then((messages) => {
      
-      console.log("createPageDone "+ opponent_me)
       sendNoti();
       pullUps_reset();
       bindPage();
+
     
     })
   }
@@ -682,17 +725,10 @@ function detectPoseInRealTime(video, net) {
             let cond_wrists_high_enough_y = (LeftWristY < NoseY-shoulderWidthMean*1.3) && (RightWirstY < NoseY-shoulderWidthMean*1.3)
             let cond_wrists_far_enough_apart_x = Math.abs(LeftWristX-RightWirstX) > (shoulderWidthMean*0.6)
             let cond_wrists_not_too_far_enough_apart_y = Math.abs(LeftWristY-RightWirstY) < (shoulderWidthMean*0.3)
-            console.log(1)
-            console.log(cond_wrists_high_enough_y)
-            console.log(cond_wrists_far_enough_apart_x)
-            console.log(cond_wrists_not_too_far_enough_apart_y)
+
             // check if hands are high enough
             if (cond_wrists_high_enough_y && cond_wrists_far_enough_apart_x&& cond_wrists_not_too_far_enough_apart_y){
-              console.log("startPositionTaken")
-              console.log(LeftWristX)
-              console.log(RightWirstX)
-              console.log(shoulderWidthMean*0.6)
-              console.log("shoulderWidthMean: " + shoulderWidthMean)
+
 
               pullUps.startPositionTaken = true // save that we reached start position
 
@@ -793,9 +829,7 @@ const databaseQueryID = async () => {
     const links = await res.json();
     try {
       opponents = String(links.findLinkByID.opponents).split(",").map(s => s.trim())
-      console.log(links.findLinkByID.opponentsreps)
       opponentsreps = String(links.findLinkByID.opponentsreps).split(",").map(s => s.trim())
-      console.log(opponentsreps)
       let challengetype = String(links.findLinkByID.challengetype)
       challengereps = String(links.findLinkByID.challengereps)
       let challengerules = String(links.findLinkByID.challengerules)
@@ -851,7 +885,7 @@ const databaseSubmitReps = async (reset = false) => {
  * available camera devices, and setting off the detectPoseInRealTime function.
  */
 export async function bindPage() {
-
+  
   
   // button_new2.style.display = "block"
   
@@ -912,8 +946,7 @@ export async function bindPage() {
   databaseQueryID().then((messages) => {
     let opponents = messages[0]
     let opponentsreps = messages[1]
-    console.log("1111")
-    console.log(opponentsreps)
+
     let challengetype = messages[2]
     let challengereps = messages[3]
     let challengerules = messages[4]
@@ -960,6 +993,7 @@ export async function bindPage() {
 
       let opponentsreps_index_me = opponents.indexOf(opponent_me)
       let opponentsreps_me = opponentsreps[opponentsreps_index_me]
+      opponentsreps_me_backup = opponentsreps_me;
 
       if (opponentsreps_me != -1){
         
@@ -987,8 +1021,7 @@ export async function bindPage() {
             getUserSubscription().then(function(subscrition) {
               if (subscrition) {
                 const body = { id, subscrition, opponent_me };
-                console.log("getUserSubscription")
-                console.log("getUserSubscription"+ opponent_me)
+
                 try {
                   fetch('/.netlify/functions/handlePushNotificationSubscription', {
                     method: 'POST',
@@ -1026,6 +1059,9 @@ export async function bindPage() {
 
       }
 
+      let emoji_winner_x;
+      let emoji_winner_y;
+
       document.getElementById('opponents_selection').style.display = 'none';
       let button = document.getElementById('who_are_you').style.display = 'none';
       opponents_title = "OX<br> challenged OY!<br>RX RT!"
@@ -1052,12 +1088,13 @@ export async function bindPage() {
       if (opponentsreps[0] == "-1"){
         document.getElementById("opponents_reps_OXR").innerHTML = "open"
       }else if (opponentsreps[0] == challengereps){
+        emoji_winner_x = "🥇 "
         document.getElementById("opponents_reps_OX").style.fontSize = "xx-large"
         document.getElementById("opponents_reps_OXR").innerHTML = challengereps
         document.getElementById("opponents_reps_OXR").style.color = "#04b72bff";
         document.getElementById("opponents_reps_OXR").style.fontSize = "xx-large"
       }else if (opponentsreps[0] < challengereps){
-        
+        emoji_winner_x = "🥈 "
         document.getElementById("opponents_reps_OXR").innerHTML = opponentsreps[0]
         document.getElementById("opponents_reps_OXR").style.color = "#ff5555ff";
       }
@@ -1065,11 +1102,13 @@ export async function bindPage() {
       if (opponentsreps[1] == "-1"){
         document.getElementById("opponents_reps_OYR").innerHTML = "open"
       }else if (opponentsreps[1] == challengereps){
+        emoji_winner_y = "🥇 "
         document.getElementById("opponents_reps_OY").style.fontSize = "xx-large"
         document.getElementById("opponents_reps_OYR").innerHTML = challengereps
         document.getElementById("opponents_reps_OYR").style.color = "#04b72bff";
         document.getElementById("opponents_reps_OYR").style.fontSize = "xx-large"
       }else if (opponentsreps[1] < challengereps){
+        emoji_winner_y = "🥈 "
         document.getElementById("opponents_reps_OYR").innerHTML = opponentsreps[1]
         document.getElementById("opponents_reps_OYR").style.color = "#ff5555ff";
       }
@@ -1079,11 +1118,14 @@ export async function bindPage() {
       // # ------------------------------------------------------------------------------------------------------
       
       if (opponentsreps[0] != "-1" && opponentsreps[1] != "-1"){
+        document.getElementById("opponents_reps_OX").innerHTML = emoji_winner_x + document.getElementById("opponents_reps_OX").innerHTML
+        document.getElementById("opponents_reps_OY").innerHTML = emoji_winner_y + document.getElementById("opponents_reps_OY").innerHTML
+
         document.getElementById('img_accept_start').style.display = 'None';
         document.getElementById('img_accept_start_retry').style.display = 'None';
         
         if (opponentsreps_me != challengereps){
-          document.getElementById('img_looser').style.display = 'block';
+          //document.getElementById('img_looser').style.display = 'block';
         }else{
           document.getElementById('img_winner').style.display = 'block';
         }
@@ -1093,9 +1135,27 @@ export async function bindPage() {
         let button_reopen = document.getElementById('img_reopen')
         button_reopen.onclick = function() {
 
+          // here we check if the challenge was meanwhile reset by another player
+          // This prevents making the challenge although the game is closed already
+          // in this case we alert the user and reset the page
+          databaseQueryID().then((messages) => {
+            let opponents = messages[0]
+            let opponentsreps = messages[1]
+            let opponentsreps_index_me = opponents.indexOf(opponent_me)
+            let opponentsreps_me = opponentsreps[opponentsreps_index_me]
+            if (opponentsreps_me_backup != opponentsreps_me){
+              alert("Another player reset the challenge. Page is reloaded.")
+              location.reload();
+            }
+          })
+
           databaseSubmitReps(true);
           sendNoti("reset");
+          console.log("reload now")
+          setTimeout(function(){
+            //do what you need here
           location.reload();
+        }, 2000);
         }
       
       // # ------------------------------------------------------------------------------------------------------
@@ -1110,9 +1170,25 @@ export async function bindPage() {
           button = document.getElementById("img_accept_start_retry")
         }
         button.onclick = function() {
+
+          // change the url that the use can press the button to reload the page
           const url = new URL(window.location.href);
           url.searchParams.set('mode', "challenge");
           window.history.pushState("", "", url);
+
+        // here we check if the challenge was meanwhile reset by another player
+        // This prevents making the challenge although the game is closed already
+        // in this case we alert the user and reset the page
+        databaseQueryID().then((messages) => {
+          let opponents = messages[0]
+          let opponentsreps = messages[1]
+          let opponentsreps_index_me = opponents.indexOf(opponent_me)
+          let opponentsreps_me = opponentsreps[opponentsreps_index_me]
+          if (opponentsreps_me_backup != opponentsreps_me){
+            alert("Another player reset the challenge. Page is reloaded.")
+            location.reload();
+          }
+        })
           
           fromStartToChallenge()
         }

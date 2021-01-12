@@ -1,7 +1,7 @@
 
 function receivePushNotification(event) {
-    console.log("[Service Worker] Push Received.");
-    console.log(event.data);
+    // console.log("[Service Worker] Push Received.");
+    // console.log(event.data);
     
     // const { image, tag, url, title, text } = event.data.json();
     const { title, url, text } = event.data.json();
