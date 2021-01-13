@@ -117,6 +117,14 @@ async function setupCamera() {
         'Browser API navigator.mediaDevices.getUserMedia not available');
   }
 
+
+
+  const stream_test = await navigator.mediaDevices.getUserMedia({'audio': false});
+  let {width, height} = stream_test.getTracks()[0].getSettings();
+
+  videoWidth = width
+  videoHeight = height
+
   const video = document.getElementById('video');
   video.width = videoWidth;
   video.height = videoHeight;
