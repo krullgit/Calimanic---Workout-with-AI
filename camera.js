@@ -125,16 +125,17 @@ async function setupCamera() {
   const stream = await navigator.mediaDevices.getUserMedia({
     'audio': false,
     'video': {
-      facingMode: 'user'
+      facingMode: 'user',
+      width: mobile ? undefined : videoWidth,
+      height: mobile ? undefined : videoHeight,
     },
   });
 
-  let {width, height} = stream.getTracks()[0].getSettings();
-  alert(`${width}x${height}`);
-  videoWidth = width
-  videoHeight = height
-  video.width = videoWidth;
-  video.height = videoHeight;
+  // let {width, height} = stream.getTracks()[0].getSettings();
+  // videoWidth = width
+  // videoHeight = height
+  // video.width = videoWidth;
+  // video.height = videoHeight;
 
   video.srcObject = stream;
 
