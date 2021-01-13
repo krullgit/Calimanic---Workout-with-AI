@@ -22,8 +22,8 @@ import Stats from 'stats.js';
 import {drawBoundingBox, drawKeypoints, drawSkeleton, isMobile, toggleLoadingUI, tryResNetButtonName, tryResNetButtonText, updateTryResNetButtonDatGuiCss, drawSegment, toTuple} from './demo_util';
 
 const bspurl = "http://localhost:8888/camera.html?id=286629219312599553&O=Matthes"
-const videoWidth = 600;
-const videoHeight = 500;
+let videoWidth = 600;
+let videoHeight = 500;
 
 const stats = new Stats();
 const gui = new dat.GUI({width: 300});
@@ -125,12 +125,17 @@ async function setupCamera() {
   const stream = await navigator.mediaDevices.getUserMedia({
     'audio': false,
     'video': {
-      facingMode: 'user',
-      width: mobile ? undefined : videoWidth,
-      height: mobile ? undefined : videoHeight,
+      facingMode: 'user'
     },
   });
-  
+
+  let {width, height} = stream.getTracks()[0].getSettings();
+  alert(`${width}x${height}`);
+  videoWidth = width
+  videoHeight = height
+  video.width = videoWidth;
+  video.height = videoHeight;
+
   video.srcObject = stream;
 
   return new Promise((resolve) => {
