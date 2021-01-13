@@ -24,6 +24,7 @@ import {drawBoundingBox, drawKeypoints, drawSkeleton, isMobile, toggleLoadingUI,
 const bspurl = "http://localhost:8888/camera.html?id=286629219312599553&O=Matthes"
 const videoWidth = 600;
 const videoHeight = 500;
+
 const stats = new Stats();
 const gui = new dat.GUI({width: 300});
 // dat.GUI.toggleHide();
@@ -129,6 +130,7 @@ async function setupCamera() {
       height: mobile ? undefined : videoHeight,
     },
   });
+  
   video.srcObject = stream;
 
   return new Promise((resolve) => {
