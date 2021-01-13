@@ -110,7 +110,6 @@ window.addEventListener('popstate', function(event) {
 }, false);
 
 
-
 async function setupCamera() {
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     throw new Error(
@@ -119,7 +118,18 @@ async function setupCamera() {
 
 
 
-  
+
+  const stream_test = await navigator.mediaDevices.getUserMedia({'audio': false, "video": true});
+  let {width, height} = stream_test.getTracks()[0].getSettings();
+  videoWidth = width
+  videoHeight = height
+  const video = document.getElementById('video');
+  video.width = videoWidth;
+  video.height = videoHeight;
+
+
+
+
 
   const mobile = isMobile();
   const stream = await navigator.mediaDevices.getUserMedia({
@@ -131,17 +141,17 @@ async function setupCamera() {
     },
   });
 
-  
 
-  const stream_test = await navigator.mediaDevices.getUserMedia({'audio': false, "video": true});
-  let {width, height} = stream_test.getTracks()[0].getSettings();
 
-  videoWidth = width
-  videoHeight = height
 
-  const video = document.getElementById('video');
-  video.width = videoWidth;
-  video.height = videoHeight;
+
+  // const stream_test = await navigator.mediaDevices.getUserMedia({'audio': false, "video": true});
+  // let {width, height} = stream_test.getTracks()[0].getSettings();
+  // videoWidth = width
+  // videoHeight = height
+  // const video = document.getElementById('video');
+  // video.width = videoWidth;
+  // video.height = videoHeight;
 
 
 
