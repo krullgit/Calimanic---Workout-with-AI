@@ -118,19 +118,6 @@ async function setupCamera() {
 
 
 
-
-  // const stream_test = await navigator.mediaDevices.getUserMedia({'audio': false, "video": true});
-  // let {width, height} = stream_test.getTracks()[0].getSettings();
-  // videoWidth = width
-  // videoHeight = height
-  // const video = document.getElementById('video');
-  // video.width = videoWidth;
-  // video.height = videoHeight;
-
-
-
-
-
   const mobile = isMobile();
   const stream = await navigator.mediaDevices.getUserMedia({
     'audio': false,
@@ -139,10 +126,6 @@ async function setupCamera() {
     },
   });
 
-
-
-
-
   //const stream_test = await navigator.mediaDevices.getUserMedia({'audio': false, "video": true});
   let {width, height} = stream.getTracks()[0].getSettings();
   videoWidth = width
@@ -150,7 +133,6 @@ async function setupCamera() {
   const video = document.getElementById('video');
   video.width = videoWidth;
   video.height = videoHeight;
-
 
 
 
@@ -773,33 +755,45 @@ function detectPoseInRealTime(video, net) {
             }
           // we are already at start position and weight for the pull pull up
           }else{
-            let cond_head_high_enough_y = (pullUps.startPositionPosition[1]+pullUps.startPositionPosition[3])/2 > NoseY
-          
-            if (cond_head_high_enough_y){
+
+            // check if he left the bar
+            let cond_wrists_too_low_y = (LeftWristY > NoseY) && (RightWirstY > NoseY);
+
+            if (!cond_wrists_too_low_y){
+
+              let cond_head_high_enough_y = (pullUps.startPositionPosition[1]+pullUps.startPositionPosition[3])/2 > NoseY
+              if (cond_head_high_enough_y){
+                
+                pullUps.startPositionTaken = false // save that we are waiting for getting to the start position again (hang loose)
+                pullUps.startPositionPositionLeftWrist = 0 
+                pullUps.startPositionPositionRightWrist = 0
+                pullUps.pullUpCounter = pullUps.pullUpCounter + 1
+                rep_counter_total.innerHTML = pullUps.pullUpCounter+"/"+challengereps;
+                rep_counter_total_done.innerHTML = pullUps.pullUpCounter+"/"+challengereps;
+                rep_counter.innerHTML = pullUps.pullUpCounter
+                rep_counter_background.style.display='block';        
+                rep_counter.style.display='block';  
+                
+                
+                setTimeout(function(){
+                  
+            
+                  rep_counter_background.style.display='none';     
+                  rep_counter.style.display='none';
+                          
+                }, 500);
+  
+                if (pullUps.pullUpCounter >= challengereps | challenge_done){
+                  createPageDone();
+                  return true;
+                }
               
-              pullUps.startPositionTaken = false // save that we are waiting for getting to the start position again (hang loose)
+              // if he left the bar, reset startPositionTaken to avoid cheated pullups
+              }
+            }else{
+              pullUps.startPositionTaken = false
               pullUps.startPositionPositionLeftWrist = 0 
               pullUps.startPositionPositionRightWrist = 0
-              pullUps.pullUpCounter = pullUps.pullUpCounter + 1
-              rep_counter_total.innerHTML = pullUps.pullUpCounter+"/"+challengereps;
-              rep_counter_total_done.innerHTML = pullUps.pullUpCounter+"/"+challengereps;
-              rep_counter.innerHTML = pullUps.pullUpCounter
-              rep_counter_background.style.display='block';        
-              rep_counter.style.display='block';  
-              
-              
-              setTimeout(function(){
-                
-          
-                rep_counter_background.style.display='none';     
-                rep_counter.style.display='none';
-                        
-              }, 500);
-
-              if (pullUps.pullUpCounter >= challengereps | challenge_done){
-                createPageDone();
-                return true;
-              }
             }
           }
         }
