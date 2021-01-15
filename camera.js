@@ -761,7 +761,7 @@ function detectPoseInRealTime(video, net) {
           }else{
 
             // check if he left the bar
-            let cond_wrists_too_low_y = (LeftWristY > NoseY+shoulderWidthMean*0.3) && (RightWirstY > NoseY+shoulderWidthMean*0.3);
+            let cond_wrists_too_low_y = (LeftWristY > NoseY+shoulderWidthMean*0.6) && (RightWirstY > NoseY+shoulderWidthMean*0.6);
             let cond_wrists_too_high_y = (LeftWristY < pullUps.startPositionPosition[1]-shoulderWidthMean*0.6) && (RightWirstY < pullUps.startPositionPosition[3]-shoulderWidthMean*0.6);
             console.log("cond_wrists_too_high_y: "+cond_wrists_too_high_y)
 
