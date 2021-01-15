@@ -58,9 +58,13 @@ function logSubmit(event) {
         }
         button_copy.onclick = function() {
             var copyText = document.querySelector("#new_created_link").textContent;
-            navigator.clipboard.writeText(copyText);
-            /* Alert the copied text */
-            alert("Copied!");
+            navigator.clipboard.writeText(copyText).then(function() {
+                /* Alert the copied text */
+                alert("Copied!");
+            }, function() {
+                /* clipboard write failed */
+                alert("Copy failed :(");
+            });
         }
     });
 }

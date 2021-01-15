@@ -455,8 +455,12 @@ function createPageDone() {
     bindPage()
   }
   let button_submit = document.getElementById("button_submit")
+  let spinner_submit = document.getElementById("spinner_submit")
+  button_submit.style.display = "block";
+  spinner_submit.style.display = "none";
   button_submit.onclick = function() {
-
+    button_submit.style.display = "none";
+    spinner_submit.style.display = "block";
     // here we check if the challenge was meanwhile reset by another player
     // This prevents making the challenge although the game is closed already
     // in this case we alert the user and reset the page
@@ -472,7 +476,7 @@ function createPageDone() {
     })
 
     databaseSubmitReps().then((messages) => {
-     
+      
       sendNoti();
       pullUps_reset();
       bindPage();
@@ -757,9 +761,11 @@ function detectPoseInRealTime(video, net) {
           }else{
 
             // check if he left the bar
-            let cond_wrists_too_low_y = (LeftWristY > NoseY) && (RightWirstY > NoseY);
+            let cond_wrists_too_low_y = (LeftWristY > NoseY+shoulderWidthMean*0.3) && (RightWirstY > NoseY+shoulderWidthMean*0.3);
+            let cond_wrists_too_high_y = (LeftWristY < pullUps.startPositionPosition[1]-shoulderWidthMean*0.3) && (RightWirstY < pullUps.startPositionPosition[3]-shoulderWidthMean*0.3);
+            console.log("cond_wrists_too_high_y: "+cond_wrists_too_high_y)
 
-            if (!cond_wrists_too_low_y){
+            if (!cond_wrists_too_low_y &&!cond_wrists_too_high_y){
 
               let cond_head_high_enough_y = (pullUps.startPositionPosition[1]+pullUps.startPositionPosition[3])/2 > NoseY
               if (cond_head_high_enough_y){
@@ -1030,6 +1036,13 @@ export async function bindPage() {
       button_get_notified.style.display = 'block';
       const pushNotificationSuported = isPushNotificationSupported()
       button_get_notified.onclick = function() {
+
+        // none the button
+        button_get_notified.style.display = 'none';
+        // show spinnerinstead
+        let spinner_get_notified = document.getElementById('spinner_get_notified')
+        spinner_get_notified.style.display = 'block';
+
         // ask for permission
         initializePushNotifications().then((message) => {
           // register SW
@@ -1049,6 +1062,7 @@ export async function bindPage() {
                   })
                     .then(response => response.json())
                     .then(data => {
+                      spinner_get_notified.style.display = 'none';
                       alert("You get notified when someone did the exercise or reopened the challenge.");
                       // const body2 = { id, opponent_me };
                       // fetch('/.netlify/functions/sendPushNotification', {
