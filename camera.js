@@ -797,12 +797,12 @@ function detectPoseInRealTime(video, net) {
               // if he left the bar, reset startPositionTaken to avoid cheated pullups
               }
             }else{
-              
+              let text;
               if (cond_wrists_too_low_y){
-                text = "too_low"
+                text = "tl"
               
               }else if (cond_wrists_too_high_y){
-                text = "too_high"
+                text = "th"
               }
               else{
                 text = "else"
@@ -811,6 +811,7 @@ function detectPoseInRealTime(video, net) {
               
 
               rep_counter.innerHTML = text
+              rep_counter_background.style.fontSize='block';
               rep_counter_background.style.display='block';        
               rep_counter.style.display='block';  
 
