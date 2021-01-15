@@ -765,7 +765,7 @@ function detectPoseInRealTime(video, net) {
             let cond_wrists_too_high_y = (LeftWristY < pullUps.startPositionPosition[1]-shoulderWidthMean*0.6) && (RightWirstY < pullUps.startPositionPosition[3]-shoulderWidthMean*0.6);
             console.log("cond_wrists_too_high_y: "+cond_wrists_too_high_y)
 
-            if (!cond_wrists_too_low_y &&!cond_wrists_too_high_y){
+            if (!cond_wrists_too_low_y && !cond_wrists_too_high_y){
 
               let cond_head_high_enough_y = (pullUps.startPositionPosition[1]+pullUps.startPositionPosition[3])/2 > NoseY
               if (cond_head_high_enough_y){
@@ -797,6 +797,28 @@ function detectPoseInRealTime(video, net) {
               // if he left the bar, reset startPositionTaken to avoid cheated pullups
               }
             }else{
+              
+              if (cond_wrists_too_low_y){
+                text = "too_low"
+              
+              }else if (cond_wrists_too_high_y){
+                text = "too_high"
+              }
+              else{
+                text = "else"
+              }
+
+              
+
+              rep_counter.innerHTML = text
+              rep_counter_background.style.display='block';        
+              rep_counter.style.display='block';  
+
+              setTimeout(function(){
+                rep_counter_background.style.display='none';     
+                rep_counter.style.display='none';  
+              }, 500);
+
               pullUps.startPositionTaken = false
               pullUps.startPositionPositionLeftWrist = 0 
               pullUps.startPositionPositionRightWrist = 0
