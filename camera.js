@@ -987,7 +987,7 @@ export async function bindPage() {
   let isiOS = iOS();
   if (!isiOS){
     if(!isChrome){
-      rules_browser.innerHTML = "Please use Chrome on Android :)"
+      rules_browser.innerHTML = "Please use Chrome :)"
       rules_browser.style.display = "block";
     }
   }else if(isiOS){
@@ -1126,6 +1126,7 @@ export async function bindPage() {
         let spinner_get_notified = document.getElementById('spinner_get_notified')
         spinner_get_notified.style.display = 'block';
 
+        // if ios than tell the user that notofications are not supported
         if (iOS()){
           alert("iOS does not support our notifications so far :(");
           spinner_get_notified.style.display = 'none';
@@ -1166,14 +1167,6 @@ export async function bindPage() {
                 }
               }
             });
-
-            
-            // if (reset==true){
-            //   reps = "-1,-1"
-            // } 
-          
-          
-            // const body = { id, reps };
            
             registration.update()
           });
