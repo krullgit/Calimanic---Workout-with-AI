@@ -67,6 +67,22 @@ function pullUps_reset() {
   }
 }
 
+// detect if we are in iOS
+function iOS() {
+  return [
+    'iPad Simulator',
+    'iPhone Simulator',
+    'iPod Simulator',
+    'iPad',
+    'iPhone',
+    'iPod'
+  ].includes(navigator.platform)
+  // iPad on iOS 13 detection
+  || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+}
+
+
+
 
 window.addEventListener('popstate', function(event) {
 
@@ -129,50 +145,19 @@ async function setupCamera() {
 
   const video = document.getElementById('video');
   
-  // var isiPad = navigator.userAgent.match(/iPad/i) != null;
-  // var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  var standalone = window.navigator.standalone,
-    userAgent = window.navigator.userAgent.toLowerCase(),
-    safari = /safari/.test( userAgent ),
-    ios = /iphone|ipod|ipad/.test( userAgent );
-
-    if( ios ) {
-        
-        if ( !standalone && safari ) {
-            
-            alert('browser')
-            
-        } else if ( standalone && !safari ) {
-            
-          alert('standalone')
-            
-        } else if ( !standalone && !safari ) {
-            
-          alert('uiwebview')
-            
-        };
-        
-    } else {
-        
-      alert('not iOS')
-        
-    };
-
-  if (!ios){
+  if (!iOS()){
     let {width, height} = stream.getTracks()[0].getSettings();
     videoWidth = width
     videoHeight = height
     video.width = videoWidth;
     video.height = videoHeight;
+  }else{
+    video.width = videoWidth;
+    video.height = videoHeight;
   }
-
 
   video.srcObject = stream;
   
-  
- 
-  
-
   return new Promise((resolve) => {
     video.onloadedmetadata = () => {
       resolve(video);
@@ -969,21 +954,7 @@ const databaseSubmitReps = async (reset = false) => {
  */
 export async function bindPage() {
 
-  function iOS() {
-    return [
-      'iPad Simulator',
-      'iPhone Simulator',
-      'iPod Simulator',
-      'iPad',
-      'iPhone',
-      'iPod'
-    ].includes(navigator.platform)
-    // iPad on iOS 13 detection
-    || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
-  }
-
-  alert(iOS())
-  
+ 
   
   // button_new2.style.display = "block"
   
