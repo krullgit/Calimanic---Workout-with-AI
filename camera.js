@@ -129,9 +129,14 @@ async function setupCamera() {
 
   const video = document.getElementById('video');
   
-  var isiPad = navigator.userAgent.match(/iPad/i) != null;
-  alert(isiPad)
-  if (isiPad){
+  // var isiPad = navigator.userAgent.match(/iPad/i) != null;
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  if (isIOS) {
+    alert('This is a IOS device');
+  } else {
+    alert('This is Not a IOS device');
+  }
+  if (!isIOS){
     let {width, height} = stream.getTracks()[0].getSettings();
     videoWidth = width
     videoHeight = height
