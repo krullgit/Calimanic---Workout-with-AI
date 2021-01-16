@@ -130,13 +130,21 @@ async function setupCamera() {
   const video = document.getElementById('video');
   
   // var isiPad = navigator.userAgent.match(/iPad/i) != null;
-  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  if (isIOS) {
+  // var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  var userAgent = window.navigator.userAgent.toLowerCase();
+  var safari = /safari/.test( userAgent );
+  var ios = /iphone|ipod|ipad/.test( userAgent );
+  if (ios) {
     alert('This is a IOS device');
   } else {
     alert('This is Not a IOS device');
   }
-  if (!isIOS){
+  if (safari) {
+    alert('This is a safari device');
+  } else {
+    alert('This is Not a safari device');
+  }
+  if (!ios){
     let {width, height} = stream.getTracks()[0].getSettings();
     videoWidth = width
     videoHeight = height
