@@ -136,8 +136,9 @@ async function setupCamera() {
   }
 
   let stream;
+
+  // This part works on chrome pc and chrome android
   if (!iOS()){
-    alert("NOT iOS");
     const stream_test = await navigator.mediaDevices.getUserMedia({
       'audio': false,
       'video': {
@@ -151,14 +152,16 @@ async function setupCamera() {
     });
     videoWidth = width
     videoHeight = height
+
     stream = await navigator.mediaDevices.getUserMedia({
       'audio': false,
       'video': {
         facingMode: 'user'
       },
     });
+
+  // This part works on safari ios
   }else{
-    alert("This is iOS")
     stream = await navigator.mediaDevices.getUserMedia({
       'audio': false,
       'video': {
@@ -976,6 +979,42 @@ const databaseSubmitReps = async (reset = false) => {
  * available camera devices, and setting off the detectPoseInRealTime function.
  */
 export async function bindPage() {
+
+  // Opera 8.0+
+  var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+
+  // Firefox 1.0+
+  var isFirefox = typeof InstallTrigger !== 'undefined';
+
+  // Safari 3.0+ "[object HTMLElementConstructor]" 
+  var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
+
+  // Internet Explorer 6-11
+  var isIE = /*@cc_on!@*/false || !!document.documentMode;
+
+  // Edge 20+
+  var isEdge = !isIE && !!window.StyleMedia;
+
+  // Chrome 1 - 79
+  var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+
+  // Edge (based on chromium) detection
+  var isEdgeChromium = isChrome && (navigator.userAgent.indexOf("Edg") != -1);
+
+  // Blink engine detection
+  var isBlink = (isChrome || isOpera) && !!window.CSS;
+
+
+  var output = 'Detecting browsers by ducktyping:<hr>';
+  output += 'isFirefox: ' + isFirefox + '<br>';
+  output += 'isChrome: ' + isChrome + '<br>';
+  output += 'isSafari: ' + isSafari + '<br>';
+  output += 'isOpera: ' + isOpera + '<br>';
+  output += 'isIE: ' + isIE + '<br>';
+  output += 'isEdge: ' + isEdge + '<br>';
+  output += 'isEdgeChromium: ' + isEdgeChromium + '<br>';
+  output += 'isBlink: ' + isBlink + '<br>';
+  alert(output);
 
  
   
