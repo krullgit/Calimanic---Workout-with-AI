@@ -968,6 +968,28 @@ const databaseSubmitReps = async (reset = false) => {
  * available camera devices, and setting off the detectPoseInRealTime function.
  */
 export async function bindPage() {
+
+    if( ios ) {
+          
+      if ( !standalone && safari ) {
+          
+          alert('browser')
+          
+      } else if ( standalone && !safari ) {
+          
+        alert('standalone')
+          
+      } else if ( !standalone && !safari ) {
+          
+        alert('uiwebview')
+          
+      };
+      
+  } else {
+      
+    alert('not iOS')
+      
+  };
   
   
   // button_new2.style.display = "block"
