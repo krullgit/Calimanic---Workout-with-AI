@@ -131,19 +131,33 @@ async function setupCamera() {
   
   // var isiPad = navigator.userAgent.match(/iPad/i) != null;
   // var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  var userAgent = window.navigator.userAgent.toLowerCase();
-  var safari = /safari/.test( userAgent );
-  var ios = /iphone|ipod|ipad/.test( userAgent );
-  if (ios) {
-    alert('This is a IOS device');
-  } else {
-    alert('This is Not a IOS device');
-  }
-  if (safari) {
-    alert('This is a safari device');
-  } else {
-    alert('This is Not a safari device');
-  }
+  var standalone = window.navigator.standalone,
+    userAgent = window.navigator.userAgent.toLowerCase(),
+    safari = /safari/.test( userAgent ),
+    ios = /iphone|ipod|ipad/.test( userAgent );
+
+    if( ios ) {
+        
+        if ( !standalone && safari ) {
+            
+            alert('browser')
+            
+        } else if ( standalone && !safari ) {
+            
+          alert('standalone')
+            
+        } else if ( !standalone && !safari ) {
+            
+          alert('uiwebview')
+            
+        };
+        
+    } else {
+        
+      alert('not iOS')
+        
+    };
+
   if (!ios){
     let {width, height} = stream.getTracks()[0].getSettings();
     videoWidth = width
