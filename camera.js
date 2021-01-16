@@ -969,31 +969,20 @@ const databaseSubmitReps = async (reset = false) => {
  */
 export async function bindPage() {
 
-  var standalone = window.navigator.standalone,
-  userAgent = window.navigator.userAgent.toLowerCase(),
-  safari = /safari/.test( userAgent ),
-  ios = /iphone|ipod|ipad/.test( userAgent );
-  if( ios ) {
-          
-      if ( !standalone && safari ) {
-          
-          alert('browser')
-          
-      } else if ( standalone && !safari ) {
-          
-        alert('standalone')
-          
-      } else if ( !standalone && !safari ) {
-          
-        alert('uiwebview')
-          
-      };
-      
-  } else {
-      
-    alert('not iOS')
-      
-  };
+  function iOS() {
+    return [
+      'iPad Simulator',
+      'iPhone Simulator',
+      'iPod Simulator',
+      'iPad',
+      'iPhone',
+      'iPod'
+    ].includes(navigator.platform)
+    // iPad on iOS 13 detection
+    || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+  }
+
+  alert(iOS())
   
   
   // button_new2.style.display = "block"
