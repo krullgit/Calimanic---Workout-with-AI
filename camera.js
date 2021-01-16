@@ -984,9 +984,7 @@ export async function bindPage() {
   var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
   alert(isChrome);
   alert(isAndroid())
-  alert(isAndroid())
-
- 
+  alert(isiOS())
   
   // button_new2.style.display = "block"
   
