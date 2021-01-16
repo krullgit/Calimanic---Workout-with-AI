@@ -140,26 +140,31 @@ async function setupCamera() {
   const mobile = isMobile();
 
   const video = document.getElementById('video');
-  video.width = videoWidth;
-  video.height = videoHeight;
-  // if (!iOS()){
-  //   alert("NOT iOS")
-  //   let {width, height} = stream.getTracks()[0].getSettings();
-  //   videoWidth = width
-  //   videoHeight = height
-  //   video.width = videoWidth;
-  //   video.height = videoHeight;
-  // }else{
-  //   alert("This is iOS")
-  //   video.width = videoWidth;
-  //   video.height = videoHeight;
 
+  if (!iOS()){
+    alert("NOT iOS")
+    const stream_test = await navigator.mediaDevices.getUserMedia({
+      'audio': false,
+      'video': {
+        facingMode: 'user'
+      },
+    });
+    let {width, height} = stream_test.getTracks()[0].getSettings();
+    videoWidth = width
+    videoHeight = height
+    video.width = videoWidth;
+    video.height = videoHeight;
+  }else{
+    alert("This is iOS")
+    video.width = videoWidth;
+    video.height = videoHeight;
+  }
   const stream = await navigator.mediaDevices.getUserMedia({
     'audio': false,
     'video': {
       facingMode: 'user',
-      width: mobile ? undefined : videoWidth,
-      height: mobile ? undefined : videoHeight,
+      width: videoWidth,
+      height: videoHeight,
     },
   });
 
