@@ -1128,6 +1128,7 @@ export async function bindPage() {
 
         if (iOS()){
           alert("iOS does not support our notifications so far :(");
+          spinner_get_notified.style.display = 'none';
         }
 
         // ask for permission
