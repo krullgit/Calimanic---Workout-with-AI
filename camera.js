@@ -126,8 +126,7 @@ window.addEventListener('popstate', function(event) {
 }, false);
 
 
-
-
+const video = document.getElementById('video');
 
 
 async function setupCamera() {
@@ -136,13 +135,8 @@ async function setupCamera() {
         'Browser API navigator.mediaDevices.getUserMedia not available');
   }
 
-
-  const mobile = isMobile();
-
-  const video = document.getElementById('video');
-
   if (!iOS()){
-    alert("NOT iOS")
+    alert("NOT iOS");
     const stream_test = await navigator.mediaDevices.getUserMedia({
       'audio': false,
       'video': {
@@ -150,6 +144,10 @@ async function setupCamera() {
       },
     });
     let {width, height} = stream_test.getTracks()[0].getSettings();
+    stream_test.getTracks().forEach(function(track) {
+      alert("here");
+      track.stop();
+    });
     videoWidth = width
     videoHeight = height
     video.width = videoWidth;
@@ -159,6 +157,10 @@ async function setupCamera() {
     video.width = videoWidth;
     video.height = videoHeight;
   }
+
+
+
+  const mobile = isMobile();
   const stream = await navigator.mediaDevices.getUserMedia({
     'audio': false,
     'video': {
@@ -170,6 +172,7 @@ async function setupCamera() {
 
 
   
+
 
   video.srcObject = stream;
   
