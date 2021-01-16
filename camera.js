@@ -987,11 +987,11 @@ export async function bindPage() {
   let isiOS = iOS();
   if (!isiOS){
     if(!isChrome){
-      rules_browser.innerHTML = "Please use Chrome :)"
+      rules_browser.innerHTML = "Please use Chrome on Android :)"
       rules_browser.style.display = "block";
     }
   }else if(isiOS){
-    rules_browser.innerHTML = "Please use Safari :)"
+    rules_browser.innerHTML = "Please use Safari on iOS :)"
     rules_browser.style.display = "block";
   }
   
