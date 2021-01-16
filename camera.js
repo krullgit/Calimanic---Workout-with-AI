@@ -135,6 +135,7 @@ async function setupCamera() {
         'Browser API navigator.mediaDevices.getUserMedia not available');
   }
 
+  let stream;
   if (!iOS()){
     alert("NOT iOS");
     const stream_test = await navigator.mediaDevices.getUserMedia({
@@ -150,25 +151,29 @@ async function setupCamera() {
     });
     videoWidth = width
     videoHeight = height
-    video.width = videoWidth;
-    video.height = videoHeight;
+    stream = await navigator.mediaDevices.getUserMedia({
+      'audio': false,
+      'video': {
+        facingMode: 'user'
+      },
+    });
   }else{
     alert("This is iOS")
-    video.width = videoWidth;
-    video.height = videoHeight;
+    stream = await navigator.mediaDevices.getUserMedia({
+      'audio': false,
+      'video': {
+        facingMode: 'user',
+        width: videoWidth,
+        height: videoHeight,
+      },
+    });
   }
 
+  video.width = videoWidth;
+  video.height = videoHeight;
 
 
-  const mobile = isMobile();
-  const stream = await navigator.mediaDevices.getUserMedia({
-    'audio': false,
-    'video': {
-      facingMode: 'user',
-      width: videoWidth,
-      height: videoHeight,
-    },
-  });
+  
 
 
   
