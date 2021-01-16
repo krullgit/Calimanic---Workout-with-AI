@@ -1275,6 +1275,7 @@ export async function fromStartToChallenge() {
     try {
       video_object = await loadVideo();
     } catch (e) {
+      alert(e)
       let info = document.getElementById('info');
       info.textContent = 'this browser does not support video capture,' +
           'or this device does not have a camera';
