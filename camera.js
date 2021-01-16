@@ -37,6 +37,7 @@ var rep_counter=document.getElementById('rep_counter');
 var rep_counter_total=document.getElementById('rep_counter_total');
 var rep_counter_total_done=document.getElementById('rep_counter_total_done');
 var rep_counter_done=document.getElementById('rep_counter_done');
+
 var challengereps;
 var opponents;
 var opponentsreps;
@@ -979,7 +980,7 @@ const databaseSubmitReps = async (reset = false) => {
  */
 export async function bindPage() {
 
-  let rules_browser = document.getElementById('rules_browser');
+  
 
   let isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
   let isAndroi = isAndroid();
@@ -1324,6 +1325,7 @@ export async function fromStartToChallenge() {
 
   document.getElementById('logo').style.display = 'none';
   document.getElementById('opponents_title').style.display = 'none';
+  document.getElementById('rules_browser').style.display = 'none';
   document.getElementById('challenge_done').style.display = 'none';
 
   toggleLoadingUI(false);
