@@ -126,6 +126,12 @@ async function setupCamera() {
     },
   });
 
+
+
+
+
+  video.srcObject = stream;
+
   //const stream_test = await navigator.mediaDevices.getUserMedia({'audio': false, "video": true});
   let {width, height} = stream.getTracks()[0].getSettings();
   videoWidth = width
@@ -133,11 +139,7 @@ async function setupCamera() {
   const video = document.getElementById('video');
   video.width = videoWidth;
   video.height = videoHeight;
-
-
-
-
-  video.srcObject = stream;
+  
 
   return new Promise((resolve) => {
     video.onloadedmetadata = () => {
