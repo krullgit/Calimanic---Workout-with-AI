@@ -26,11 +26,11 @@ export const tryResNetButtonText = '[New] Try ResNet50';
 const tryResNetButtonTextCss = 'width:100%;text-decoration:underline;';
 const tryResNetButtonBackgroundCss = 'background:#e61d5f;';
 
-function isAndroid() {
+export function isAndroid() {
   return /Android/i.test(navigator.userAgent);
 }
 
-function isiOS() {
+export function isiOS() {
   return /iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
 
