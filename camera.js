@@ -126,6 +126,10 @@ window.addEventListener('popstate', function(event) {
 }, false);
 
 
+
+
+
+
 async function setupCamera() {
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     throw new Error(
@@ -133,8 +137,23 @@ async function setupCamera() {
   }
 
 
-
   const mobile = isMobile();
+
+  const video = document.getElementById('video');
+  video.width = videoWidth;
+  video.height = videoHeight;
+  // if (!iOS()){
+  //   alert("NOT iOS")
+  //   let {width, height} = stream.getTracks()[0].getSettings();
+  //   videoWidth = width
+  //   videoHeight = height
+  //   video.width = videoWidth;
+  //   video.height = videoHeight;
+  // }else{
+  //   alert("This is iOS")
+  //   video.width = videoWidth;
+  //   video.height = videoHeight;
+
   const stream = await navigator.mediaDevices.getUserMedia({
     'audio': false,
     'video': {
@@ -143,19 +162,7 @@ async function setupCamera() {
   });
 
 
-  const video = document.getElementById('video');
   
-  if (!iOS()){
-    alert("NOT iOS")
-    let {width, height} = stream.getTracks()[0].getSettings();
-    videoWidth = width
-    videoHeight = height
-    video.width = videoWidth;
-    video.height = videoHeight;
-  }else{
-    video.width = videoWidth;
-    video.height = videoHeight;
-  }
 
   video.srcObject = stream;
   
