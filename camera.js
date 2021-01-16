@@ -146,6 +146,7 @@ async function setupCamera() {
   const video = document.getElementById('video');
   
   if (!iOS()){
+    alert("NOT iOS")
     let {width, height} = stream.getTracks()[0].getSettings();
     videoWidth = width
     videoHeight = height
