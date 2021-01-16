@@ -969,7 +969,11 @@ const databaseSubmitReps = async (reset = false) => {
  */
 export async function bindPage() {
 
-    if( ios ) {
+  var standalone = window.navigator.standalone,
+  userAgent = window.navigator.userAgent.toLowerCase(),
+  safari = /safari/.test( userAgent ),
+  ios = /iphone|ipod|ipad/.test( userAgent );
+  if( ios ) {
           
       if ( !standalone && safari ) {
           
