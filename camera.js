@@ -19,7 +19,7 @@ import dat from 'dat.gui';
 import Stats from 'stats.js';
 //dwsd
 
-import {drawBoundingBox, drawKeypoints, drawSkeleton, isMobile, toggleLoadingUI, tryResNetButtonName, tryResNetButtonText, updateTryResNetButtonDatGuiCss, drawSegment, toTuple, isAndroid, isiOS} from './demo_util';
+import {drawBoundingBox, drawKeypoints, drawSkeleton, isMobile, toggleLoadingUI, tryResNetButtonName, tryResNetButtonText, updateTryResNetButtonDatGuiCss, drawSegment, toTuple, isAndroid} from './demo_util';
 
 const bspurl = "http://localhost:8888/camera.html?id=286629219312599553&O=Matthes"
 let videoWidth = 600;
@@ -147,7 +147,6 @@ async function setupCamera() {
     });
     let {width, height} = stream_test.getTracks()[0].getSettings();
     stream_test.getTracks().forEach(function(track) {
-      alert("here");
       track.stop();
     });
     videoWidth = width
@@ -980,11 +979,21 @@ const databaseSubmitReps = async (reset = false) => {
  */
 export async function bindPage() {
 
-  // Chrome 1 - 79
-  var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
-  alert(isChrome);
-  alert(isAndroid())
-  alert(isiOS())
+  let rules_browser = document.getElementById('rules_browser');
+
+  let isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+  let isAndroi = isAndroid();
+  let isiOS = iOS();
+  if (!isiOS){
+    if(!isChrome){
+      rules_browser.innerHTML = "Please use Chrome :)"
+      rules_browser.style.display = "block";
+    }
+  }else if(isiOS){
+    rules_browser.innerHTML = "Please use Safari :)"
+    rules_browser.style.display = "block";
+  }
+  
   
   // button_new2.style.display = "block"
   
