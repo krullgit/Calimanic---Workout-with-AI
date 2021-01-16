@@ -842,28 +842,24 @@ function detectPoseInRealTime(video, net) {
               // if he left the bar, reset startPositionTaken to avoid cheated pullups
               }
             }else{
-              let text;
-              if (cond_wrists_too_low_y){
-                text = "tl"
+              // let text;
+              // if (cond_wrists_too_low_y){
+              //   text = "tl"
               
-              }else if (cond_wrists_too_high_y){
-                text = "th"
-              }
-              else{
-                text = "else"
-              }
-
-              
-
-              rep_counter.innerHTML = text
-              rep_counter_background.style.fontSize='block';
-              rep_counter_background.style.display='block';        
-              rep_counter.style.display='block';  
-
-              setTimeout(function(){
-                rep_counter_background.style.display='none';     
-                rep_counter.style.display='none';  
-              }, 500);
+              // }else if (cond_wrists_too_high_y){
+              //   text = "th"
+              // }
+              // else{
+              //   text = "else"
+              // }
+              // rep_counter.innerHTML = text
+              // rep_counter_background.style.fontSize='block';
+              // rep_counter_background.style.display='block';        
+              // rep_counter.style.display='block';  
+              // setTimeout(function(){
+              //   rep_counter_background.style.display='none';     
+              //   rep_counter.style.display='none';  
+              // }, 500);
 
               pullUps.startPositionTaken = false
               pullUps.startPositionPositionLeftWrist = 0 
