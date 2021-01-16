@@ -1126,9 +1126,14 @@ export async function bindPage() {
         let spinner_get_notified = document.getElementById('spinner_get_notified')
         spinner_get_notified.style.display = 'block';
 
+        if (iOS()){
+          alert("iOS does not support our notifications so far :(");
+        }
+
         // ask for permission
         initializePushNotifications().then((message) => {
           // register SW
+          
           registerServiceWorker().then((registration) => {
             
             // subscribe
