@@ -1,62 +1,117 @@
 /**
- * @license
- * Copyright 2019 Google LLC. All Rights Reserved.
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * =============================================================================
+ * This file is loaded into the camera.html
+ * 
+ * Authors: Matthes Krull
  */
+
+// ------------------------------------------------------------------------------------------------------
+// imports
+// ------------------------------------------------------------------------------------------------------
+
 import * as posenet from '@tensorflow-models/posenet';
 import dat from 'dat.gui';
 import Stats from 'stats.js';
-//dwsd
-
 import {drawBoundingBox, drawKeypoints, drawSkeleton, isMobile, toggleLoadingUI, tryResNetButtonName, tryResNetButtonText, updateTryResNetButtonDatGuiCss, drawSegment, toTuple, isAndroid} from './demo_util';
 
-const bspurl = "http://localhost:8888/camera.html?id=286629219312599553&O=Matthes"
-let videoWidth = 600;
-let videoHeight = 500;
-
-const stats = new Stats();
-const gui = new dat.GUI({width: 300});
-// dat.GUI.toggleHide();
-let video_object = null;
-let net = null;
-let processing_active = false; // this cariable is needed to deactivate the processing when the back button is triggered
-
-var rep_counter_background=document.getElementById('rep_counter_background');
-var rep_counter=document.getElementById('rep_counter');
-var rep_counter_total=document.getElementById('rep_counter_total');
-var rep_counter_total_done=document.getElementById('rep_counter_total_done');
-var rep_counter_done=document.getElementById('rep_counter_done');
-
-var challengereps;
-var opponents;
-var opponentsreps;
-var opponent_me;
-var param_me_update = false;
-var id;
-
-let opponentsreps_me_backup;
-
+// for push notifications
 import {
   isPushNotificationSupported,
   initializePushNotifications,
   registerServiceWorker,
   getUserSubscription,
   createNotificationSubscription
-} from "./push-notifications";
+} from "../push-notifications";
 
+// ------------------------------------------------------------------------------------------------------
+// params
+// ------------------------------------------------------------------------------------------------------
 
+// size of the camera output
+let videoWidth = 600;
+let videoHeight = 500;
+
+// posenet params
+const defaultQuantBytes = 2;
+const defaultMobileNetMultiplier = 1.0;
+// const defaultMobileNetMultiplier = isMobile() ? 0.50 : 0.75;
+const defaultMobileNetStride = 16;
+const defaultMobileNetInputResolution = 250;
+const defaultResNetMultiplier = 1.0;
+const defaultResNetStride = 32;
+const defaultResNetInputResolution = 250;
+
+// gui params
+const guiState = {
+  algorithm: 'multi-pose',
+  input: {
+    architecture: 'MobileNetV1', // ResNet50, MobileNetV1
+    outputStride: defaultMobileNetStride,
+    inputResolution: defaultMobileNetInputResolution,
+    multiplier: defaultMobileNetMultiplier,
+    quantBytes: defaultQuantBytes
+  },
+  singlePoseDetection: {
+    minPoseConfidence: 0.1,
+    minPartConfidence: 0.5,
+  },
+  multiPoseDetection: {
+    maxPoseDetections: 1,
+    minPoseConfidence: 0.15,
+    minPartConfidence: 0.1,
+    nmsRadius: 30.0,
+  },
+  output: {
+    showVideo: true,
+    showVideo: true,
+    showSkeleton: true,
+    showPoints: true,
+    showBoundingBox: false,
+  },
+  net: null,
+};
+
+// ------------------------------------------------------------------------------------------------------
+// variables
+// ------------------------------------------------------------------------------------------------------
+
+// create panel for posenet control
+const stats = new Stats();
+const gui = new dat.GUI({width: 300});
+// posenet control panel
+dat.GUI.toggleHide();
+
+// container for the video/webcam object
+let video_object = null;
+// container for posenet network
+let net = null;
+// this variable is needed to deactivate the processing when the back button is triggered
+let processing_active = false; 
+
+// get html elements
+var rep_counter_background=document.getElementById('rep_counter_background');
+var rep_counter=document.getElementById('rep_counter');
+var rep_counter_total=document.getElementById('rep_counter_total');
+var rep_counter_total_done=document.getElementById('rep_counter_total_done');
+var rep_counter_done=document.getElementById('rep_counter_done');
+const video = document.getElementById('video');
+
+// more 
+var challengereps;
+var opponents;
+var opponentsreps;
+var opponent_me;
+var param_me_update = false;
+var id;
+let opponentsreps_me_backup;
 var pullUps;
+
+// ------------------------------------------------------------------------------------------------------
+// functions
+// ------------------------------------------------------------------------------------------------------
+
+/**
+ * reset variables that count repetitions
+ */
 function pullUps_reset() {
   pullUps = {
     startPositionTaken: false,
@@ -68,7 +123,71 @@ function pullUps_reset() {
   }
 }
 
-// detect if we are in iOS
+/**
+ * get data from server according to challenge ID
+ */
+ const databaseQueryID = async () => {
+  const body = { id };
+  try {
+    const res = await fetch('/.netlify/functions/getLinks', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+    const links = await res.json();
+    try {
+      opponents = String(links.findLinkByID.opponents).split(",").map(s => s.trim())
+      opponentsreps = String(links.findLinkByID.opponentsreps).split(",").map(s => s.trim())
+      let challengetype = String(links.findLinkByID.challengetype)
+      challengereps = String(links.findLinkByID.challengereps)
+      let challengerules = String(links.findLinkByID.challengerules)
+      return [opponents, opponentsreps, challengetype, challengereps, challengerules]
+    } catch (error) {
+      let opponents = ["Opponent1","Opponent2"]
+      let opponentsreps = ["0","0"]
+      let challengetype = "pullup"
+      let challengereps = "5"
+      let challengerules = null
+      return [opponents, opponentsreps, challengetype, challengereps, challengerules]
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+/**
+ * current workout is saved in database
+ */
+ const databaseSubmitReps = async (reset = false) => {
+  
+  param_me_update = true
+
+  // let opponentsreps_index_me = opponents.indexOf(opponent_me)
+  // opponentsreps[opponentsreps_index_me] = pullUps.pullUpCounter
+  // let reps = String(opponentsreps[0]+","+opponentsreps[1])
+
+  let reps = String(pullUps.pullUpCounter)
+
+  if (reset==true){
+    reps = "-1,-1"
+  } 
+
+  const body = { id, reps, opponent_me };
+  try {
+    const res = await fetch('/.netlify/functions/updateLinks', {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    });
+    const links = await res.json();
+    
+  } catch (error) {
+    console.error(error);
+  }
+  return "databaseSubmitReps done"
+};
+
+/**
+ * detect if we are in iOS
+ */
 function iOS() {
   return [
     'iPad Simulator',
@@ -82,9 +201,7 @@ function iOS() {
   || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
 }
 
-
-
-
+/** delete everything and fo back to overview page, if the user presses the back button in the browser*/
 window.addEventListener('popstate', function(event) {
 
   processing_active = false
@@ -97,18 +214,18 @@ window.addEventListener('popstate', function(event) {
     video_object = null;
   }
 
-  // # ------------------------------------------------------------------------------------------------------
-  // # delete ever child of the opponents container
-  // # ------------------------------------------------------------------------------------------------------
+  // ------------------------------------------------------------------------------------------------------
+  // delete every child of the opponents container
+  // ------------------------------------------------------------------------------------------------------
   
   const myNode = document.getElementById("opponents_selection");
   while (myNode.lastElementChild) {
     myNode.removeChild(myNode.lastElementChild);
   }
 
-  // # ------------------------------------------------------------------------------------------------------
-  // # hode ever elements in element "loading" and "main"
-  // # ------------------------------------------------------------------------------------------------------
+  // ------------------------------------------------------------------------------------------------------
+  // hide every elements in element "loading" and "main"
+  // ------------------------------------------------------------------------------------------------------
   
   let children = document.getElementById('loading').children;
   for (var i = 0; i < children.length; i++) {
@@ -126,11 +243,16 @@ window.addEventListener('popstate', function(event) {
 
 }, false);
 
+/** loads the webcam */
+async function loadVideo() {
+  const video = await setupCamera();
+  video.play();
+  return video;
+}
 
-const video = document.getElementById('video');
-
-
+/** loads the webcam */
 async function setupCamera() {
+  
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     throw new Error(
         'Browser API navigator.mediaDevices.getUserMedia not available');
@@ -175,13 +297,6 @@ async function setupCamera() {
   video.width = videoWidth;
   video.height = videoHeight;
 
-
-  
-
-
-  
-
-
   video.srcObject = stream;
   
   return new Promise((resolve) => {
@@ -190,53 +305,6 @@ async function setupCamera() {
     };
   });
 }
-
-
-async function loadVideo() {
-  const video = await setupCamera();
-  video.play();
-  return video;
-}
-
-const defaultQuantBytes = 2;
-
-const defaultMobileNetMultiplier = 1.0;
-// const defaultMobileNetMultiplier = isMobile() ? 0.50 : 0.75;
-const defaultMobileNetStride = 16;
-const defaultMobileNetInputResolution = 250;
-
-const defaultResNetMultiplier = 1.0;
-const defaultResNetStride = 32;
-const defaultResNetInputResolution = 250;
-
-const guiState = {
-  algorithm: 'multi-pose',
-  input: {
-    architecture: 'MobileNetV1', // ResNet50, MobileNetV1
-    outputStride: defaultMobileNetStride,
-    inputResolution: defaultMobileNetInputResolution,
-    multiplier: defaultMobileNetMultiplier,
-    quantBytes: defaultQuantBytes
-  },
-  singlePoseDetection: {
-    minPoseConfidence: 0.1,
-    minPartConfidence: 0.5,
-  },
-  multiPoseDetection: {
-    maxPoseDetections: 1,
-    minPoseConfidence: 0.15,
-    minPartConfidence: 0.1,
-    nmsRadius: 30.0,
-  },
-  output: {
-    showVideo: true,
-    showVideo: true,
-    showSkeleton: true,
-    showPoints: true,
-    showBoundingBox: false,
-  },
-  net: null,
-};
 
 /**
  * Sets up dat.gui controller on the top-right of the window
@@ -247,8 +315,6 @@ function setupGui(cameras, net) {
   if (cameras.length > 0) {
     guiState.camera = cameras[0].deviceId;
   }
-
-  
 
   let architectureController = null;
   guiState[tryResNetButtonName] = function() {
@@ -266,12 +332,14 @@ function setupGui(cameras, net) {
   // The input parameters have the most effect on accuracy and speed of the
   // network
   let input = gui.addFolder('Input');
+
   // Architecture: there are a few PoseNet models varying in size and
   // accuracy. 1.01 is the largest, but will be the slowest. 0.50 is the
   // fastest, but least accurate.
   architectureController =
       input.add(guiState.input, 'architecture', ['MobileNetV1', 'ResNet50']);
   guiState.architecture = guiState.input.architecture;
+
   // Input resolution:  Internally, this parameter affects the height and width
   // of the layers in the neural network. The higher the value of the input
   // resolution the better the accuracy but slower the speed.
@@ -391,7 +459,6 @@ function setupGui(cameras, net) {
   output.add(guiState.output, 'showBoundingBox');
   output.open();
 
-
   architectureController.onChange(function(architecture) {
     // if architecture is ResNet50, then show ResNet50 options
     updateGui();
@@ -423,8 +490,6 @@ function setupFPS() {
   document.getElementById('main').appendChild(stats.dom);
 }
 
-
-
 /**
  * Feeds an image to posenet to estimate poses - this is where the magic
  * happens. This function loops with a requestAnimationFrame method.
@@ -441,64 +506,58 @@ const sendNoti = async (mode="normal") => {
   // console.log(res.text())
 }
 
-
+/**
+ * Here, the page after the workout is done is created
+ */
 function createPageDone() {
+
+  /**
+   * here we check if the challenge was meanwhile reset by another player
+   */
+  function checkforChallengeReset() {
+    databaseQueryID().then((messages) => {
+      let opponents = messages[0]
+      let opponentsreps = messages[1]
+      let opponentsreps_index_me = opponents.indexOf(opponent_me)
+      let opponentsreps_me = opponentsreps[opponentsreps_index_me]
+      if (opponentsreps_me_backup != opponentsreps_me){
+        alert("Another player reset the challenge. Page is reloaded.")
+        location.reload();
+      }
+    })
+  }
 
   video_object.srcObject.getTracks().forEach(function(track) {
     track.stop();
   });
   video_object = null;
   
-  
   document.getElementById('main').style.display = "none"
   document.getElementById("rep_counter_total_done").style.display = "block"
   document.getElementById("challenge_done").style.display = "block"
-  
 
   if (pullUps.pullUpCounter >= challengereps){
     document.getElementById("maybe_next_time").style.display = "none"
   }else{
     document.getElementById("you_still_got_it").style.display = "none"
   }
-  
 
+  // here, you can retry the workout
   let button_retry = document.getElementById("button_retry")
   button_retry.onclick = function() {
     pullUps_reset();
-
-    // here we check if the challenge was meanwhile reset by another player
-    // This prevents making the challenge although the game is closed already
-    // in this case we alert the user and reset the page
-    databaseQueryID().then((messages) => {
-      let opponents = messages[0]
-      let opponentsreps = messages[1]
-      let opponentsreps_index_me = opponents.indexOf(opponent_me)
-      let opponentsreps_me = opponentsreps[opponentsreps_index_me]
-      if (opponentsreps_me_backup != opponentsreps_me){
-        alert("Another player reset the challenge. Page is reloaded.")
-        location.reload();
-      }
-    })
-    
+    checkforChallengeReset()
     fromStartToChallenge(net)
   }
+
+  // here, you can decide to not safe current the workout
   let button_thisneverhappened = document.getElementById("button_thisneverhappened")
   button_thisneverhappened.onclick = function() {
-    // here we check if the challenge was meanwhile reset by another player
-    // This prevents making the challenge although the game is closed already
-    // in this case we alert the user and reset the page
-    databaseQueryID().then((messages) => {
-      let opponents = messages[0]
-      let opponentsreps = messages[1]
-      let opponentsreps_index_me = opponents.indexOf(opponent_me)
-      let opponentsreps_me = opponentsreps[opponentsreps_index_me]
-      if (opponentsreps_me_backup != opponentsreps_me){
-        alert("Another player reset the challenge. Page is reloaded.")
-        location.reload();
-      }
-    })
+    checkforChallengeReset()
     bindPage()
   }
+
+  // here, you can submit your workout result
   let button_submit = document.getElementById("button_submit")
   let spinner_submit = document.getElementById("spinner_submit")
   button_submit.style.display = "block";
@@ -506,27 +565,12 @@ function createPageDone() {
   button_submit.onclick = function() {
     button_submit.style.display = "none";
     spinner_submit.style.display = "block";
-    // here we check if the challenge was meanwhile reset by another player
-    // This prevents making the challenge although the game is closed already
-    // in this case we alert the user and reset the page
-    databaseQueryID().then((messages) => {
-      let opponents = messages[0]
-      let opponentsreps = messages[1]
-      let opponentsreps_index_me = opponents.indexOf(opponent_me)
-      let opponentsreps_me = opponentsreps[opponentsreps_index_me]
-      if (opponentsreps_me_backup != opponentsreps_me){
-        alert("Another player reset the challenge. Page is reloaded.")
-        location.reload();
-      }
-    })
 
+    checkforChallengeReset()
     databaseSubmitReps().then((messages) => {
-      
       sendNoti();
       pullUps_reset();
       bindPage();
-
-    
     })
   }
 }
@@ -542,8 +586,6 @@ function detectPoseInRealTime(video, net) {
   canvas.style.display = "block";
   // document.getElementById('output').style.marginLeft = "-20vw";
 
-
-
   // left: 50%;
   // -ms-transform: translate(-50%, -50%);
   // transform: translate(-50%, -50%);
@@ -556,8 +598,7 @@ function detectPoseInRealTime(video, net) {
   rep_counter_total.style.display='block'; 
   rep_counter_done.style.display='block'; 
 
-  // HEREEE
-
+  // shows a little animations for the current workout
   setTimeout(function(){
     document.getElementById("rep_counter_e1").style.display='none';                
     document.getElementById("rep_counter_e2").style.display='none';   
@@ -591,10 +632,6 @@ function detectPoseInRealTime(video, net) {
     document.getElementById("rep_counter_e2").style.display='none';                  
   }, 4000);
 
-
-
-  
-
   let challenge_done = false;
   rep_counter_done.onclick = function() {
     challenge_done = true;
@@ -606,12 +643,10 @@ function detectPoseInRealTime(video, net) {
   // permutation on all the keypoints.
   const flipPoseHorizontal = true;
   
-
   canvas.width = videoWidth;
   canvas.height = videoHeight;
 
   async function poseDetectionFrame() {
-
 
     if (challenge_done){
       ctx.clearRect(0, 0, videoWidth, videoHeight);
@@ -755,21 +790,17 @@ function detectPoseInRealTime(video, net) {
       let leftShoulder = keypoints[5]
       let rightShoulder = keypoints[6]
       
-      
       if ((LeftWrist["score"] > minPoseConfidence) && (RightWirst["score"] > minPoseConfidence) && (Nose["score"] > minPoseConfidence) && (leftShoulder["score"] > minPoseConfidence) && (rightShoulder["score"] > minPoseConfidence)){
         
         pullUps.shoulderWidth.push(leftShoulder["position"]["x"]-rightShoulder["position"]["x"]);
         if (pullUps.shoulderWidth.length > 10){
 
           // get shoulder mean
-
           pullUps.shoulderWidth.shift();
           const average = arr => arr.reduce( ( p, c ) => p + c, 0 ) / arr.length;
           const shoulderWidthMean = Math.abs(average(pullUps.shoulderWidth));
-          
 
           // look if wrists are shoulder mean higher than Nose
-          
           const NoseY = Nose["position"]["y"] 
           const LeftWristX = LeftWrist["position"]["x"] 
           const LeftWristY = LeftWrist["position"]["y"] 
@@ -786,7 +817,6 @@ function detectPoseInRealTime(video, net) {
             // check if hands are high enough
             if (cond_wrists_high_enough_y && cond_wrists_far_enough_apart_x&& cond_wrists_not_too_far_enough_apart_y){
 
-
               pullUps.startPositionTaken = true // save that we reached start position
 
               // save wrist postitions 
@@ -800,7 +830,6 @@ function detectPoseInRealTime(video, net) {
               pullUps.startPositionPositionLeftWrist = LeftWrist;
               pullUps.startPositionPositionRightWrist = RightWirst;
             
-              
             }
           // we are already at start position and weight for the pull pull up
           }else{
@@ -825,9 +854,7 @@ function detectPoseInRealTime(video, net) {
                 rep_counter_background.style.display='block';        
                 rep_counter.style.display='block';  
                 
-                
-                setTimeout(function(){
-                  
+                setTimeout(function(){  
             
                   rep_counter_background.style.display='none';     
                   rep_counter.style.display='none';
@@ -869,8 +896,6 @@ function detectPoseInRealTime(video, net) {
         }
       }
 
-
-
       if (score >= minPoseConfidence) {
         if (guiState.output.showPoints) {
           if (pullUps.startPositionPositionLeftWrist != 0){
@@ -905,78 +930,11 @@ function detectPoseInRealTime(video, net) {
   });
 }
 
-// ------------------------------------------------------------------------------------------------------
-// get data from server according to challenge ID
-// ------------------------------------------------------------------------------------------------------
-
-const databaseQueryID = async () => {
-  const body = { id };
-  try {
-    const res = await fetch('/.netlify/functions/getLinks', {
-      method: 'POST',
-      body: JSON.stringify(body),
-    });
-    const links = await res.json();
-    try {
-      opponents = String(links.findLinkByID.opponents).split(",").map(s => s.trim())
-      opponentsreps = String(links.findLinkByID.opponentsreps).split(",").map(s => s.trim())
-      let challengetype = String(links.findLinkByID.challengetype)
-      challengereps = String(links.findLinkByID.challengereps)
-      let challengerules = String(links.findLinkByID.challengerules)
-      return [opponents, opponentsreps, challengetype, challengereps, challengerules]
-    } catch (error) {
-      let opponents = ["Opponent1","Opponent2"]
-      let opponentsreps = ["0","0"]
-      let challengetype = "pullup"
-      let challengereps = "5"
-      let challengerules = null
-      return [opponents, opponentsreps, challengetype, challengereps, challengerules]
-    }
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-// ------------------------------------------------------------------------------------------------------
-// get data from server according to challenge ID
-// ------------------------------------------------------------------------------------------------------
-
-const databaseSubmitReps = async (reset = false) => {
-  
-  param_me_update = true
-
-  // let opponentsreps_index_me = opponents.indexOf(opponent_me)
-  // opponentsreps[opponentsreps_index_me] = pullUps.pullUpCounter
-  // let reps = String(opponentsreps[0]+","+opponentsreps[1])
-
-  let reps = String(pullUps.pullUpCounter)
-
-  if (reset==true){
-    reps = "-1,-1"
-  } 
-
-  const body = { id, reps, opponent_me };
-  try {
-    const res = await fetch('/.netlify/functions/updateLinks', {
-      method: 'PUT',
-      body: JSON.stringify(body),
-    });
-    const links = await res.json();
-    
-  } catch (error) {
-    console.error(error);
-  }
-  return "databaseSubmitReps done"
-};
-
-
 /**
  * Kicks off the demo by loading the posenet model, finding and loading
  * available camera devices, and setting off the detectPoseInRealTime function.
  */
 export async function bindPage() {
-
-  
 
   let isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
   let isAndroi = isAndroid();
@@ -990,7 +948,6 @@ export async function bindPage() {
     rules_browser.innerHTML = "Please use Safari on iOS :)"
     rules_browser.style.display = "block";
   }
-  
   
   // button_new2.style.display = "block"
   
@@ -1012,16 +969,12 @@ export async function bindPage() {
   document.getElementById("img_new_divider").style.display = "block"
   document.getElementById("logo").style.display = "block"
 
-
-  // HEREEEEEE
   let button_new = document.getElementById("img_new")
   button_new.style.display = "block"
   button_new.onclick = function() {
     window.location.href = link_new;
   }
   
-
-
   toggleLoadingUI(true);
   net = await posenet.load({
     architecture: guiState.input.architecture,
@@ -1032,22 +985,13 @@ export async function bindPage() {
   });
   toggleLoadingUI(false, "spinner");
 
-  
-  // ------------------------------------------------------------------------------------------------------
   // get the ID from the url
-  // ------------------------------------------------------------------------------------------------------
-
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   id = urlParams.get('id')
   const param_me = urlParams.get('me')
 
-  
-
-  // ------------------------------------------------------------------------------------------------------
   // wait if the server responded the challnge details
-  // ------------------------------------------------------------------------------------------------------
-
   databaseQueryID().then((messages) => {
     let opponents = messages[0]
     let opponentsreps = messages[1]
@@ -1061,10 +1005,7 @@ export async function bindPage() {
 
     if (param_me == null){
 
-      // # ------------------------------------------------------------------------------------------------------
-      // # Create the "who_are_you" page
-      // # ------------------------------------------------------------------------------------------------------
-
+      // Create the "who_are_you" page
       var opponents_title = document.getElementById("opponents_title").innerHTML
       document.getElementById('opponents_title').style.display = 'none';
       document.getElementById('who_are_you').style.display = 'block';
@@ -1093,7 +1034,7 @@ export async function bindPage() {
       render_challenge_overview()
     }
     
-
+     // Create the "overview" page
     function render_challenge_overview() {
 
       let opponentsreps_index_me = opponents.indexOf(opponent_me)
@@ -1106,8 +1047,6 @@ export async function bindPage() {
       }else{
         document.getElementById('img_accept_start').style.display = 'block';
       }
-      
-
       
       document.getElementById('rules').style.display = 'block';
 
@@ -1166,9 +1105,7 @@ export async function bindPage() {
            
             registration.update()
           });
-      });
-        
-
+        });
       }
 
       let emoji_winner_x;
@@ -1225,9 +1162,9 @@ export async function bindPage() {
         document.getElementById("opponents_reps_OYR").style.color = "#ff5555ff";
       }
 
-      // # ------------------------------------------------------------------------------------------------------
-      // # Case: Both player played = Game Done
-      // # ------------------------------------------------------------------------------------------------------
+      // ------------------------------------------------------------------------------------------------------
+      // Case: Both player played = Game Done
+      // ------------------------------------------------------------------------------------------------------
       
       if (opponentsreps[0] != "-1" && opponentsreps[1] != "-1"){
         document.getElementById("opponents_reps_OX").innerHTML = emoji_winner_x + document.getElementById("opponents_reps_OX").innerHTML
@@ -1270,9 +1207,9 @@ export async function bindPage() {
         }, 2000);
         }
       
-      // # ------------------------------------------------------------------------------------------------------
-      // # Case: One Player didnt play yet = Game Open
-      // # ------------------------------------------------------------------------------------------------------
+      // ------------------------------------------------------------------------------------------------------
+      // Case: One Player didnt play yet = Game Open
+      // ------------------------------------------------------------------------------------------------------
 
       }else{
         let button;
@@ -1288,34 +1225,29 @@ export async function bindPage() {
           url.searchParams.set('mode', "challenge");
           window.history.pushState("", "", url);
 
-        // here we check if the challenge was meanwhile reset by another player
-        // This prevents making the challenge although the game is closed already
-        // in this case we alert the user and reset the page
-        databaseQueryID().then((messages) => {
-          let opponents = messages[0]
-          let opponentsreps = messages[1]
-          let opponentsreps_index_me = opponents.indexOf(opponent_me)
-          let opponentsreps_me = opponentsreps[opponentsreps_index_me]
-          if (opponentsreps_me_backup != opponentsreps_me){
-            alert("Another player reset the challenge. Page is reloaded.")
-            location.reload();
-          }
-        })
+          // here we check if the challenge was meanwhile reset by another player
+          // This prevents making the challenge although the game is closed already
+          // in this case we alert the user and reset the page
+          databaseQueryID().then((messages) => {
+            let opponents = messages[0]
+            let opponentsreps = messages[1]
+            let opponentsreps_index_me = opponents.indexOf(opponent_me)
+            let opponentsreps_me = opponentsreps[opponentsreps_index_me]
+            if (opponentsreps_me_backup != opponentsreps_me){
+              alert("Another player reset the challenge. Page is reloaded.")
+              location.reload();
+            }
+          })
           
+          // start workout
           fromStartToChallenge()
         }
       }
     }
-    
-    
-
-
   });
-
-
- 
 }
 
+/** if the user decided to go to the workout */
 export async function fromStartToChallenge() {
 
   document.getElementById('logo').style.display = 'none';
@@ -1343,12 +1275,10 @@ export async function fromStartToChallenge() {
   }
   setupFPS();
   detectPoseInRealTime(video_object, net);
-
-
- 
 }
 
 navigator.getUserMedia = navigator.getUserMedia ||
     navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
 // kick off the demo
 bindPage();

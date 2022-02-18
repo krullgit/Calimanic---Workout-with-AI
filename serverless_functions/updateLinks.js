@@ -1,3 +1,4 @@
+/** This serverless function saves a workout result*/
 
 const axios = require('axios');
 require('dotenv').config();
@@ -63,16 +64,9 @@ exports.handler = async (event) => {
                 variables)
         }
 
-        
-
-        
-
-
-        
-
         return formattedResponse(200, "Done");
+
     } catch (err) {
-        
         console.error("8888");
         console.error(err);
         return formattedResponse(500, { err: 'Something went wrong' });

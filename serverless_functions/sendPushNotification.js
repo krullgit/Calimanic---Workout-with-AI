@@ -1,3 +1,5 @@
+/** This serverless function sends push notifications through service worker, if the opponent did a workout*/
+
 const axios = require('axios');
 require('dotenv').config();
 const webpush = require("web-push");
@@ -16,24 +18,18 @@ webpush.setVapidDetails(
   privateVapidKey
 );
 
-
-
 exports.handler = async (event) => {
     if (event.httpMethod !== 'POST') {
         return formattedResponse(405, { err: 'Method not supported' });
     }
 
     console.log("Got request")
-
     const { id, opponent_me, mode} = JSON.parse(event.body);
-    console.log("11")
+    // console.log("11")
     console.log(mode)
     const variables = { id };
     
-
     try {
-
-    
 
       // get old subscriptions
       const res_1 = await sendQuery(
@@ -56,7 +52,6 @@ exports.handler = async (event) => {
       }
       let challengereps = String(res_1.findLinkByID.challengereps)
       
-
       if (opponentspushSubscriptions != null){
         opponentspushSubscriptions = opponentspushSubscriptions.split("PULLUPDIVIDER")
         if (opponentspushSubscriptions.length>1){
@@ -64,7 +59,6 @@ exports.handler = async (event) => {
           let title;
           let text;
           let url;
-
 
             // console.log(1)
             // console.log(opponentspushSubscriptions)
@@ -85,7 +79,6 @@ exports.handler = async (event) => {
             // console.log(5)
             // console.log(opponentspushSubscriptions)
             
-
             // console.log("aaaa")
             // console.log(opponentspushSubscriptions)
             // console.log(opponentspushSubscriptions[0])
@@ -112,7 +105,6 @@ exports.handler = async (event) => {
             var currentdate = new Date(); 
             var datetime =  currentdate.getHours() + ":"  
                               + currentdate.getMinutes() + ":"
-
             
             // get the correct emoji
             let emoji_me = "";
@@ -134,7 +126,6 @@ exports.handler = async (event) => {
               } else{
                 emoji_1 = "🥈";
               }
-                
             }
 
             if(mode == "reset"){
@@ -154,7 +145,6 @@ exports.handler = async (event) => {
             console.log(8)
             console.log(title)
             console.log(text)
-            
 
             url = "https://thirsty-brattain-52b1a8.netlify.app/camera.html?id="+id
             let test = await webpush
@@ -174,7 +164,6 @@ exports.handler = async (event) => {
             })
             console.log(9)
             console.log(text)
-
         }
         // console.log(12)
       }
@@ -183,16 +172,12 @@ exports.handler = async (event) => {
       
       return formattedResponse(200, { message: "done" })
       //return formattedResponse(202, { stat: 'Something went wrongggs' });
-      
 
     } catch (err) {
       console.log(14)
       console.error(err);
       return formattedResponse(500, { err: 'Something went wrongg' });
     }
-
-    
-  
 };  
 
 

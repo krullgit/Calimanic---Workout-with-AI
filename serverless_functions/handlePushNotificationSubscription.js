@@ -1,11 +1,11 @@
+/** This serverless function registers push notifications through service worker, if the opponent did a workout*/
+
 const axios = require('axios');
 require('dotenv').config();
-
 
 const { SEARCH_LINK, UPDATE_opponentspushSubscriptions } = require('./utils/linkQueries.js');
 const sendQuery = require('./utils/sendQuery');
 const formattedResponse = require('./utils/formattedResponse');
-
 
 exports.handler = async (event) => {
     if (event.httpMethod !== 'POST') {
@@ -41,13 +41,11 @@ exports.handler = async (event) => {
         if (opponentspushSubscriptions_old == null || opponentspushSubscriptions_old.split("PULLUPDIVIDER").length == 1 ){
           opponentspushSubscriptions_new = [null,null];
           opponentspushSubscriptions_new[opponents_index_me] = opponentspushSubscriptions
-
           
           opponentspushSubscriptions_new = opponentspushSubscriptions_new[0]+"PULLUPDIVIDER"+opponentspushSubscriptions_new[0]
           
         // if there was a sub object already just update the requested one
         }else{
-          //console.log(0)
           //console.log(opponentspushSubscriptions)
           //console.log(0.5)
           //console.log(opponentspushSubscriptions_old)
@@ -101,8 +99,6 @@ exports.handler = async (event) => {
         return formattedResponse(500, { err: 'Something went wrong' });
     }
 
-    
-    
     // try {
     //   return formattedResponse(200, { id: susbscriptionId });
     // } catch (err) {

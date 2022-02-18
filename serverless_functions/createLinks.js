@@ -1,3 +1,5 @@
+/** This serverless function creates a new workout in the database*/
+
 const axios = require('axios');
 require('dotenv').config();
 

@@ -1,5 +1,6 @@
-const pushServerPublicKey = "BFOOfkKMIYUQBlNJ0iw84a3_RA9zzpXomJTEN_H7tBFQjhtql6WoNmEPgVZQvs0eqp6JekQdbG3k-CXzJXdVQZc";
+/** this file handles the service worker for notifications */
 
+const pushServerPublicKey = "BFOOfkKMIYUQBlNJ0iw84a3_RA9zzpXomJTEN_H7tBFQjhtql6WoNmEPgVZQvs0eqp6JekQdbG3k-CXzJXdVQZc";
 
 /**
  * checks if Push notification and service workers are supported by your browser
@@ -42,7 +43,7 @@ var sendNotification = function sendNotification() {
  * 
  */
 var registerServiceWorker = function registerServiceWorker() {
-  return navigator.serviceWorker.register("/sw.js");
+  return navigator.serviceWorker.register("/service-worker.js");
 }
 
 /**
@@ -85,5 +86,4 @@ module.exports = {
     registerServiceWorker: registerServiceWorker,
     getUserSubscription: getUserSubscription,
     createNotificationSubscription: createNotificationSubscription
-
 };

@@ -1,4 +1,6 @@
 
+/** this file registers the service worker for notifications */
+
 function receivePushNotification(event) {
     // console.log("[Service Worker] Push Received.");
     // console.log(event.data);

@@ -1,15 +1,17 @@
+<!-- This is the page where an new challenge can be created, and also the main landing page --> 
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>PullUpDuell</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Holtwood+One+SC&family=Roboto&display=swap" rel="stylesheet">  
-    <link href="jquery.nice-number.css" rel="stylesheet">
+    <link href="/style/jquery.nice-number.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-1.12.4.min.js" 
             integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" 
             crossorigin="anonymous">
     </script>
-    <script src="jquery.nice-number.js" >
+    <script src="/style/jquery.nice-number.js" >
     </script>
     <script type="text/javascript">
         $(function(){
@@ -17,8 +19,6 @@
         });
     </script>
     <style>
-
-        
         input:focus,
         select:focus,
         textarea:focus,
@@ -27,10 +27,8 @@
         }
 
         body {
-            background-color: rgb(116, 255, 225);
-            
+            background-color: rgb(116, 255, 225)
         }
-
 
         .img_user_1{
             text-align: center;
@@ -39,7 +37,6 @@
         .img_user_1 img {
             width: 200px;
         }
-
 
         .img_open{
             text-align: center;
@@ -65,7 +62,6 @@
         background-color: rgb(116, 255, 225);
         max-width: 600px;
         text-align: center;
-        
         }
 
         .challengereps{
@@ -90,8 +86,6 @@
             font-size: 30pt;;
         }
         
-        
-
         /* When moving the mouse over the submit button, add a darker green color */
         /* input[type=submit]:hover {
         background-color: #45a049;
@@ -144,9 +138,6 @@
             position: relative;
             margin: 30px auto 0px auto;
         }
-
-
-        
 
         @-webkit-keyframes sk-bounce {
             0%, 100% { -webkit-transform: scale(0.0) }
@@ -282,14 +273,10 @@
             </div>
             <input type="text" id="OY" name="OY" placeholder="Other Players Name" pattern=".{1,15}" required style="color:#55b0c4ff; font-weight: bold; font-size: 20px;">
         
-            
-            
-        
             <div class="img_your_name">
             <img src="/images/rules.png" alt="start">
             </div>
             <textarea id="rules" name="challengerules" placeholder="Only if you want to be specific!" style="height:50px; font-weight: bold; font-size: 20px;" maxlength="300"></textarea>
-            
             
             <input type="submit" value="Open" class="submit">
             </form>
@@ -319,10 +306,10 @@
             <!-- <p>Pull Up Challenge</p> -->
         </div>
     </div>
-    <script src="challenge_new.js"></script>
+    <script src="/scripts/index.js"></script>
     
     
-    <script src="jquery.nice-number.js"></script>
+    <script src="/style/jquery.nice-number.js"></script>
 </body>
 
 </html>

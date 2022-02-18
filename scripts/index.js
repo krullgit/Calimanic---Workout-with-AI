@@ -1,4 +1,8 @@
-
+/**
+ * This file is loaded into the index.html
+ * 
+ * Authors: Matthes Krull
+ */
 
 const databaseQueryID = async () => {
     const body = {
@@ -19,7 +23,6 @@ const databaseQueryID = async () => {
         console.log("WARNING: Fallback to the default game!")
     }
 };
-
 
 const OX = document.getElementById('OX');
 const OY = document.getElementById('OY');
@@ -72,10 +75,7 @@ function logSubmit(event) {
 const form = document.getElementById('form');
 form.addEventListener('submit', logSubmit);
 
-
-
-
-  // ------------------------------------------------------------------------------------------------------
-  // wait if the server responded the challnge details
-  // ------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------
+// wait if the server responded the challnge details
+// ------------------------------------------------------------------------------------------------------
 
