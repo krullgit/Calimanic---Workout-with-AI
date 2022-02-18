@@ -10,3 +10,7 @@ camera.html
 .gitignore
 drawing.svg
 .env
+# Local Netlify folder
+.netlify
+yarn.lock
+yarn-error.log
