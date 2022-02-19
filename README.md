@@ -8,7 +8,7 @@
 <table>
 <tr>
 <td>
-  Text
+  This is a workout app for athletes who want to motivate each other. You can create a new workout plan and send it so a friend, so that you both have to do a certain amount of repetitions. It uses the neural network <a href="https://github.com/tensorflow/tfjs-models/tree/master/pose-detection"> posenet </a> to superwise the workout, so that nobody can cheat and the reps are counted properly. The app is built with the <a href="https://jamstack.wtf/"> Jamstack </a> (JavaScript, API & Markup), <a href="https://www.netlify.com/products/functions/"> serverless functions </a> for notifications and database handling, a <a href="https://fauna.com/"> fauna database :floppy_disk: </a> and published with netflify<a href="https://www.netlify.com/"> netflify </a> :ocean:.
 </td>
 </tr>
 </table>
@@ -16,6 +16,39 @@
 <p align="center"> 
   <img src="gif/pacman_game.gif" alt="Animated gif pacman game" height="282px" width="637">
 </p>
+
+---
+
+<div align='center'>
+  
+### Quick Links
+  
+<a href='https://projects.colegaw.in/well-app?utm_source=GitHub&utm_medium=readme&utm_campaign=well_app_readme'>
+  
+<img src='https://img.shields.io/badge/HOMEPAGE-gray?style=for-the-badge'>
+  
+</a>
+  
+<a href='https://projects.colegaw.in/well-app/research?utm_source=GitHub&utm_medium=readme&utm_campaign=well_app_readme'>
+  
+<img src='https://img.shields.io/badge/RESEARCH-blue?style=for-the-badge'>
+  
+</a>
+  
+<a href='https://projects.colegaw.in/well-app/case-study?utm_source=GitHub&utm_medium=readme&utm_campaign=well_app_readme'>
+  
+<img src='https://img.shields.io/badge/CASE STUDY-green?style=for-the-badge'>
+  
+</a>
+  
+<br />
+  
+<br />
+
+</div>
+
+---
+
 
 <!-- TABLE OF CONTENTS -->
 <h2 id="table-of-contents"> :book: Table of Contents</h2>
@@ -25,7 +58,7 @@
   <ol>
     <li><a href="#test"> ➤ About The Project</a></li>
   </ol>
-</details>
+</details> 
 
 yarn install
 
