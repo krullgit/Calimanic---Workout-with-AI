@@ -1,6 +1,6 @@
 
 <p align="center"> 
-  <img src="images_readme/guy_40.png" alt="Pacman Logo" width="200px" height="200px">
+  <img src="images_readme/guy_40.png" alt="Logo" width="200px" height="200px">
 </p>
 
 <h1 align="center"> CALIMANICS </h1>
@@ -23,28 +23,16 @@
   
 ### Quick Links
   
-<a href='https://projects.colegaw.in/well-app?utm_source=GitHub&utm_medium=readme&utm_campaign=well_app_readme'>
-  
-<img src='https://img.shields.io/badge/HOMEPAGE-gray?style=for-the-badge'>
-  
+<a href='https://medium.com/@krull.matthes'>
+<img src='https://img.shields.io/badge/-MEDIUM-grey?style=for-the-badge'>
 </a>
-  
-<a href='https://projects.colegaw.in/well-app/research?utm_source=GitHub&utm_medium=readme&utm_campaign=well_app_readme'>
-  
-<img src='https://img.shields.io/badge/RESEARCH-blue?style=for-the-badge'>
-  
-</a>
-  
-<a href='https://projects.colegaw.in/well-app/case-study?utm_source=GitHub&utm_medium=readme&utm_campaign=well_app_readme'>
-  
-<img src='https://img.shields.io/badge/CASE STUDY-green?style=for-the-badge'>
-  
-</a>
-  
-<br />
-  
-<br />
 
+<a href='https://github.com/krullgit'>
+<img src='https://img.shields.io/badge/-Github-blue?style=for-the-badge'>
+</a>
+
+<br />  
+<br />
 </div>
 
 ---
@@ -60,14 +48,57 @@
   </ol>
 </details> 
 
-yarn install
+![-----------------------------------------------------](images_readme/sep2.png)
 
-# delete global netlify folder under usr/local/lib/node_modules 
-# sudo chmod -R 777 ./" first, and than just delete the folder
+## Getting Started
 
-npm install netlify-cli@2.58.0 -g
-sudo netlify init # to create the .netlify folder
-sudo netlify build # to create the folder for the serverless functions inside the .netlify folder
+Linux installation:
 
-sudo netlify dev # select yarn build # to build into the dist folder
-sudo netlify dev # select yarn watch # to start the server
+```sh
+yarn install # install package into the "/node_modules" folder
+npm install netlify-cli@2.58.0 -g # install netlify package globally
+sudo netlify init # create the "/.netlify" folder
+sudo netlify build # build serverless functions into the "/.netlify" folder
+sudo netlify dev # and select "yarn build" to build the website into the dist folder
+sudo netlify dev # and select "yarn watch" to start the server
+```
+The website is running now, here:
+```sh
+http://localhost:8888/
+```
+
+![Run](images_readme/terminal.svg)
+
+
+
+### Troubleshooting 
+- If you have any problems with the netflify, try to reinstall it:
+    - Therefore delete netlify folder: *usr/local/lib/node_modules/netlify-cli*
+
+![-----------------------------------------------------](images_readme/sep2.png)
+
+## Roadmap
+
+See the [open issues](https://github.com/dec0dOS/amazing-github-template/issues) for a list of proposed features (and known issues).
+
+- [Top Feature Requests](https://github.com/krullgit/pullup/issues?q=label%3Aenhancement+is%3Aopen+sort%3Areactions-%2B1-desc) (Add your votes using the 👍 reaction)
+- [Top Bugs](https://github.com/krullgit/pullup/issues?q=is%3Aissue+is%3Aopen+label%3Abug+sort%3Areactions-%2B1-desc) (Add your votes using the 👍 reaction)
+- [Newest Bugs](https://github.com/krullgit/pullup/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
+
+![-----------------------------------------------------](images_readme/sep2.png)
+
+
+## License
+
+No license so far.
+
+![-----------------------------------------------------](images_readme/sep2.png)
+
+
+## Acknowledgements
+
+Thanks for these awesome resources that were used during the development of the **Amazing GitHub template**:
+
+- <https://github.com/tensorflow/tfjs-models/tree/master/pose-detection>
+
+![-----------------------------------------------------](images_readme/sep2.png)
