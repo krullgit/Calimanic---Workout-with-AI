@@ -20,7 +20,7 @@ import {
   registerServiceWorker,
   getUserSubscription,
   createNotificationSubscription
-} from "../push-notifications";
+} from "./push-notifications";
 
 // ------------------------------------------------------------------------------------------------------
 // params

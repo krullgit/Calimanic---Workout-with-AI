@@ -1,4 +1,7 @@
-/** This serverless function saves a workout result*/
+/** This serverless function saves a workout result
+ * 
+ * Authors: Matthes Krull
+*/
 
 const axios = require('axios');
 require('dotenv').config();

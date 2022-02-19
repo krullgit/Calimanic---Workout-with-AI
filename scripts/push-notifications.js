@@ -43,7 +43,7 @@ var sendNotification = function sendNotification() {
  * 
  */
 var registerServiceWorker = function registerServiceWorker() {
-  return navigator.serviceWorker.register("/service-worker.js");
+  return navigator.serviceWorker.register("./service-worker.js");
 }
 
 /**

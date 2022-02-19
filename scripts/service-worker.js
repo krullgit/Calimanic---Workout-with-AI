@@ -1,4 +1,3 @@
-
 /** this file registers the service worker for notifications */
 
 function receivePushNotification(event) {
