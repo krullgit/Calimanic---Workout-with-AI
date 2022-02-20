@@ -936,16 +936,48 @@ function detectPoseInRealTime(video, net) {
  */
 export async function bindPage() {
 
-  let isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
-  let isAndroi = isAndroid();
-  let isiOS = iOS();
-  if (!isiOS){
-    if(!isChrome){
-      rules_browser.innerHTML = "Please use Chrome :)"
-      rules_browser.style.display = "block";
-    }
-  }else if(isiOS){
-    rules_browser.innerHTML = "Please use Safari on iOS :)"
+  // let isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+  // let isAndroi = isAndroid();
+  // let isiOS = iOS();
+  // if (!isiOS){
+  //   if(!isChrome){
+  //     rules_browser.innerHTML = "Please use Chrome :)"
+  //     rules_browser.style.display = "block";
+  //   }
+  // }else if(isiOS){
+  //   rules_browser.innerHTML = "Please use Safari on iOS :)"
+  //   rules_browser.style.display = "block";
+  // }
+
+  // please note, 
+  // that IE11 now returns undefined again for window.chrome
+  // and new Opera 30 outputs true for window.chrome
+  // but needs to check if window.opr is not undefined
+  // and new IE Edge outputs to true now for window.chrome
+  // and if not iOS Chrome check
+  // so use the below updated condition
+  var isChromium = window.chrome;
+  var winNav = window.navigator;
+  var vendorName = winNav.vendor;
+  var isOpera = typeof window.opr !== "undefined";
+  var isIEedge = winNav.userAgent.indexOf("Edg") > -1;
+  var isIOSChrome = winNav.userAgent.match("CriOS");
+
+  if (isIOSChrome) {
+    // is Google Chrome on IOS
+    rules_browser.innerHTML = "Not all functions are supported on iOS :("
+    rules_browser.style.display = "block";
+  } else if(
+    isChromium !== null &&
+    typeof isChromium !== "undefined" &&
+    vendorName === "Google Inc." &&
+    isOpera === false &&
+    isIEedge === false
+  ) {
+    // is Google Chrome
+  } else { 
+    // not Google Chrome 
+    rules_browser.innerHTML = "Please use Chrome :)"
     rules_browser.style.display = "block";
   }
   
@@ -1070,20 +1102,16 @@ export async function bindPage() {
         // ask for permission
         initializePushNotifications().then((message) => {
           // register SW
-          alert("initializePushNotifications");
           registerServiceWorker().then((registration) => {
             
             // subscribe
             createNotificationSubscription();
-            alert("createNotificationSubscription");
 
             // get subscription object
             getUserSubscription().then(function(subscrition) { //////////// error android chrome (not reach)
 
-              alert("getUserSubscription"); 
               if (subscrition) {
 
-                alert("subscrition");
                 const body = { id, subscrition, opponent_me };
                   
                 try {
@@ -1108,7 +1136,6 @@ export async function bindPage() {
                   alert(error);
                   console.error(error);
                 }
-                alert("done");
               }
             });
            
