@@ -26,6 +26,8 @@
 </a>
 </div>
 
+<p align="center">** Notes: **<br> - use Chrome :bulb: <br>- on iOS, notifications are not working</p>
+
 ---
 
 <div align='center'>
