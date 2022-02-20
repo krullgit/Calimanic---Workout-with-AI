@@ -1,4 +1,7 @@
-/** This serverless function sends push notifications through service worker, if the opponent did a workout*/
+/** This serverless function sends push notifications through service worker, if the opponent did a workout
+ * 
+ * Authors: Matthes Krull
+*/
 
 const axios = require('axios');
 require('dotenv').config();
@@ -23,10 +26,10 @@ exports.handler = async (event) => {
         return formattedResponse(405, { err: 'Method not supported' });
     }
 
-    console.log("Got request")
+    // console.log("Got request")
     const { id, opponent_me, mode} = JSON.parse(event.body);
     // console.log("11")
-    console.log(mode)
+    // console.log(mode)
     const variables = { id };
     
     try {
@@ -99,8 +102,8 @@ exports.handler = async (event) => {
             // console.log(6)
             // console.log(opponentspushSubscriptions)
             opponentspushSubscriptions = JSON.parse(opponentspushSubscriptions)
-            console.log(7)
-            console.log(opponentspushSubscriptions)
+            // console.log(7)
+            // console.log(opponentspushSubscriptions)
 
             var currentdate = new Date(); 
             var datetime =  currentdate.getHours() + ":"  
@@ -142,9 +145,9 @@ exports.handler = async (event) => {
               }
             }
 
-            console.log(8)
-            console.log(title)
-            console.log(text)
+            // console.log(8)
+            // console.log(title)
+            // console.log(text)
 
             url = "https://thirsty-brattain-52b1a8.netlify.app/camera.html?id="+id
             let test = await webpush
@@ -162,7 +165,7 @@ exports.handler = async (event) => {
               // console.log(opponentspushSubscriptions)
               // console.log(10)
             })
-            console.log(9)
+            //console.log(9)
             console.log(text)
         }
         // console.log(12)
@@ -174,7 +177,7 @@ exports.handler = async (event) => {
       //return formattedResponse(202, { stat: 'Something went wrongggs' });
 
     } catch (err) {
-      console.log(14)
+      // console.log(14)
       console.error(err);
       return formattedResponse(500, { err: 'Something went wrongg' });
     }

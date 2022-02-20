@@ -1122,7 +1122,7 @@ export async function bindPage() {
                     .then(response => response.json())
                     .then(data => {
                       spinner_get_notified.style.display = 'none';
-                      alert("You get notified when someone did the exercise or reopened the challenge.");
+                      alert("🏋🏋🏋 Notification Enabled. 🏋🏋🏋");
                       // const body2 = { id, opponent_me };
                       // fetch('/.netlify/functions/sendPushNotification', {
                       //   method: 'POST',
