@@ -35,7 +35,7 @@ const defaultQuantBytes = 2;
 const defaultMobileNetMultiplier = 1.0;
 // const defaultMobileNetMultiplier = isMobile() ? 0.50 : 0.75;
 const defaultMobileNetStride = 16;
-const defaultMobileNetInputResolution = 250;
+const defaultMobileNetInputResolution = 450;
 const defaultResNetMultiplier = 1.0;
 const defaultResNetStride = 32;
 const defaultResNetInputResolution = 250;
@@ -78,7 +78,7 @@ const guiState = {
 const stats = new Stats();
 const gui = new dat.GUI({width: 300});
 // posenet control panel
-dat.GUI.toggleHide();
+// dat.GUI.toggleHide();
 
 // container for the video/webcam object
 let video_object = null;
