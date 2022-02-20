@@ -4,13 +4,8 @@
 </p>
 
 <h1 align="center">CALIMANIC</h1>
-<div align='center'>
-  
 
-<a href='https://thirsty-brattain-52b1a8.netlify.app/'>
-<img src='https://img.shields.io/badge/-start-green?style=for-the-badge'>
-</a>
-</div>
+
 
 <table>
 <tr>
@@ -21,9 +16,15 @@
 </tr>
 </table>
 
-<p align="center"> 
+<p align="left"> 
   <img src="images_readme/demo.gif" alt="demo">
 </p>
+
+<div align='left'>
+<a href='https://thirsty-brattain-52b1a8.netlify.app/'>
+<img src='https://img.shields.io/badge/-Go%20to%20App-green?style=for-the-badge'>
+</a>
+</div>
 
 ---
 
