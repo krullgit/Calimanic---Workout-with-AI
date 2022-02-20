@@ -71,11 +71,16 @@ var createNotificationSubscription = function createNotificationSubscription() {
  */
 var getUserSubscription = function getUserSubscription() {
   //wait for service worker installation to be ready, and then
+  alert("getUserSubscription: start"); 
+  
   return navigator.serviceWorker.ready
+   
     .then(function(serviceWorker) {
+      alert("getUserSubscription: serviceWorker"); 
       return serviceWorker.pushManager.getSubscription();
     })
     .then(function(pushSubscription) {
+      alert("getUserSubscription: pushSubscription"); 
       return pushSubscription;
     });
 }

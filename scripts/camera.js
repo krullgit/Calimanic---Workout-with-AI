@@ -1078,9 +1078,9 @@ export async function bindPage() {
             alert("createNotificationSubscription");
 
             // get subscription object
-            getUserSubscription().then(function(subscrition) {
+            getUserSubscription().then(function(subscrition) { //////////// error android chrome (not reach)
 
-              alert("getUserSubscription");
+              alert("getUserSubscription"); 
               if (subscrition) {
 
                 alert("subscrition");
