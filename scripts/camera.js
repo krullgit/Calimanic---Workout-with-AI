@@ -1070,16 +1070,22 @@ export async function bindPage() {
         // ask for permission
         initializePushNotifications().then((message) => {
           // register SW
-          
+          alert("initializePushNotifications");
           registerServiceWorker().then((registration) => {
             
             // subscribe
             createNotificationSubscription();
+            alert("createNotificationSubscription");
+
             // get subscription object
             getUserSubscription().then(function(subscrition) {
-              if (subscrition) {
-                const body = { id, subscrition, opponent_me };
 
+              alert("getUserSubscription");
+              if (subscrition) {
+
+                alert("subscrition");
+                const body = { id, subscrition, opponent_me };
+                  
                 try {
                   fetch('/.netlify/functions/handlePushNotificationSubscription', {
                     method: 'POST',
@@ -1098,8 +1104,11 @@ export async function bindPage() {
                     })
                   
                 } catch (error) {
+                  alert("error");
+                  alert(error);
                   console.error(error);
                 }
+                alert("done");
               }
             });
            
@@ -1273,7 +1282,7 @@ export async function fromStartToChallenge() {
   if (gui.__controllers.length == 0){
     setupGui([], net);
   }
-  setupFPS();
+  //setupFPS();
   detectPoseInRealTime(video_object, net);
 }
 

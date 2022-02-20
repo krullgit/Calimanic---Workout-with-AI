@@ -67,8 +67,7 @@ The website is running now, here:
 http://localhost:8888/
 ```
 
-![Run](images_readme/terminal.svg)
-
+![Run](images_readme/terminal3.svg)
 
 
 ### Troubleshooting 
