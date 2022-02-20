@@ -1,4 +1,7 @@
-/** this file registers the service worker for notifications */
+/** this file registers the service worker for notifications 
+ * 
+ * This file MUST be in the root directory (beacuse its a service worker)
+*/
 
 function receivePushNotification(event) {
     // console.log("[Service Worker] Push Received.");
