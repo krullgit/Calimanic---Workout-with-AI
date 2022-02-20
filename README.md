@@ -16,11 +16,11 @@
 </tr>
 </table>
 
-<p align="left"> 
+<p align="center"> 
   <img src="images_readme/demo.gif" alt="demo">
 </p>
 
-<div align='left'>
+<div align='center'>
 <a href='https://thirsty-brattain-52b1a8.netlify.app/'>
 <img src='https://img.shields.io/badge/-Go%20to%20App-green?style=for-the-badge'>
 </a>
