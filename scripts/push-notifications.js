@@ -53,16 +53,21 @@ var registerServiceWorker = function registerServiceWorker() {
  */
 var createNotificationSubscription = function createNotificationSubscription() {
   //wait for service worker installation to be ready, and then
-  return navigator.serviceWorker.ready.then(function(serviceWorker) {
-    // subscribe and return the subscription
-    return serviceWorker.pushManager
-    .subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: pushServerPublicKey
-    })
-    .then(function(subscription) {
-      return subscription;
-    });
+  alert("createNotificationSubscription:start "); 
+  return navigator.serviceWorker.ready
+  .then(function(serviceWorker) {
+      alert("createNotificationSubscription:navigator.serviceWorker.ready"); 
+      // subscribe and return the subscription
+      return serviceWorker.pushManager
+      .subscribe({
+        
+        userVisibleOnly: true,
+        applicationServerKey: pushServerPublicKey
+      })
+      .then(function(subscription) {
+        alert("createNotificationSubscription:serviceWorker.pushManager"); 
+        return subscription;
+      });
   });
 }
 
