@@ -22,7 +22,7 @@
 </table>
 
 <p align="center"> 
-  <img src="gif/pacman_game.gif" alt="Animated gif pacman game" height="282px" width="637">
+  <img src="images_readme/demo.gif" alt="demo">
 </p>
 
 ---
