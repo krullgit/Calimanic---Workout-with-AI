@@ -3,7 +3,7 @@
   <img src="images_readme/guy_40.png" alt="Logo" width="200px" height="200px">
 </p>
 
-<h1 align="center"> CALIMANICS </h1>
+<h1 align="center">CALIMANIC</h1>
 <div align='center'>
   
 
