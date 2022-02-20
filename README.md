@@ -49,6 +49,7 @@
 
 <!-- TABLE OF CONTENTS -->
 <h2 id="table-of-contents"> :book: Table of Contents</h2>
+<p id="getting_started"></p>
 
 <details open="open">
   <summary>Table of Contents</summary>
@@ -63,11 +64,7 @@
 ![-----------------------------------------------------](images_readme/sep2.png)
 
 ## Getting Started
-<h2 id="getting_started"></h2>
-
-
-
-
+<p id="getting_started"></p>
 
 Linux installation:
 
@@ -94,7 +91,7 @@ http://localhost:8888/
 ![-----------------------------------------------------](images_readme/sep2.png)
 
 ## Roadmap
-<h2 id="roadmap"></h2>
+<p id="roadmap"></p>
 
 See the [open issues](https://github.com/dec0dOS/amazing-github-template/issues) for a list of proposed features (and known issues).
 
@@ -106,7 +103,7 @@ See the [open issues](https://github.com/dec0dOS/amazing-github-template/issues)
 
 
 ## License
-<h2 id="license"></h2>
+<p id="license"></p>
 
 No license so far.
 
@@ -114,7 +111,7 @@ No license so far.
 
 
 ## Acknowledgements
-<h2 id="acknowledgements"></h2>
+<p id="acknowledgements"></p>
 
 Thanks for these awesome resources that were used during the development of the **Amazing GitHub template**:
 
