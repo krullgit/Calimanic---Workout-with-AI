@@ -43,7 +43,7 @@ var sendNotification = function sendNotification() {
  * 
  */
 var registerServiceWorker = function registerServiceWorker() {
-  return navigator.serviceWorker.register("./../service-worker.js");
+  return navigator.serviceWorker.register("././service-worker.js");
 }
 
 /**
@@ -53,10 +53,8 @@ var registerServiceWorker = function registerServiceWorker() {
  */
 var createNotificationSubscription = function createNotificationSubscription() {
   //wait for service worker installation to be ready, and then
-  alert("createNotificationSubscription:start "); 
   return navigator.serviceWorker.ready
   .then(function(serviceWorker) {
-      alert("createNotificationSubscription:navigator.serviceWorker.ready"); 
       // subscribe and return the subscription
       return serviceWorker.pushManager
       .subscribe({
@@ -65,7 +63,6 @@ var createNotificationSubscription = function createNotificationSubscription() {
         applicationServerKey: pushServerPublicKey
       })
       .then(function(subscription) {
-        alert("createNotificationSubscription:serviceWorker.pushManager"); 
         return subscription;
       });
   });
@@ -76,16 +73,13 @@ var createNotificationSubscription = function createNotificationSubscription() {
  */
 var getUserSubscription = function getUserSubscription() {
   //wait for service worker installation to be ready, and then
-  alert("getUserSubscription: start"); 
   
   return navigator.serviceWorker.ready
    
     .then(function(serviceWorker) {
-      alert("getUserSubscription: serviceWorker"); 
       return serviceWorker.pushManager.getSubscription();
     })
     .then(function(pushSubscription) {
-      alert("getUserSubscription: pushSubscription"); 
       return pushSubscription;
     });
 }
