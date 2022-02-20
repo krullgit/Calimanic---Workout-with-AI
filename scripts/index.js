@@ -63,7 +63,7 @@ function logSubmit(event) {
             var copyText = document.querySelector("#new_created_link").textContent;
             navigator.clipboard.writeText(copyText).then(function() {
                 /* Alert the copied text */
-                alert("Copied!");
+                alert("Copied 🔥🔥🔥");
             }, function() {
                 /* clipboard write failed */
                 alert("Copy failed :(");

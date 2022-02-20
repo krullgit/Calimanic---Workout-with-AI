@@ -15,7 +15,7 @@
 <table>
 <tr>
 <td>
-  This is a workout app for athletes who want to motivate each other. You can create a new workout plan and send it so a friend, so that you both have to do a certain amount of repetitions. It uses the neural network <a href="https://github.com/tensorflow/tfjs-models/tree/master/pose-detection"> posenet </a> to superwise the workout, so that nobody can cheat and the reps are counted properly. The app is built with <a href="https://jamstack.wtf/">Jamstack</a> (JavaScript, API & Markup), <a href="https://www.netlify.com/products/functions/">serverless functions</a> (for notifications and database handling), <a href="https://fauna.com/">fauna</a> (database):floppy_disk:, and published with netflify<a href="https://www.netlify.com/">netflify</a> :ocean:.
+  This is a workout app for athletes who want to motivate each other. You can create a new workout plan and send it so a friend, so that you both have to do a certain amount of repetitions. It uses the neural network <a href="https://github.com/tensorflow/tfjs-models/tree/master/pose-detection"> posenet </a> to superwise the workout, so that nobody can cheat and the reps are counted properly. The app is built with <a href="https://jamstack.wtf/">Jamstack</a> (JavaScript, API & Markup), <a href="https://www.netlify.com/products/functions/">serverless functions</a> (for notifications and database handling), <a href="https://fauna.com/">fauna</a> (database :floppy_disk:), and published with <a href="https://www.netlify.com/">netflify</a> :ocean:.
   
 </td>
 </tr>
